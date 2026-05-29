@@ -1381,6 +1381,33 @@
         "grill-with-docs"
       ],
       "category": "research-ops"
+    },
+    {
+      "name": "markdown-html-skills",
+      "source": "./markdown-html",
+      "description": "Convert long markdown files in a Claude project into world-class, single-file, lightly-interactive HTML. v2.10.0 foundation ships 2 skills: markdown-html-orchestrator (context: fork; deterministic doctype classifier that routes to converter sub-skills based on filename + content signals; refuses input < 100 lines per Shihipar's threshold; refuses without onboarding) + design-system (10-question onboarding wizard capturing brand primary/accent HEX + heading/body Google Fonts + design style editorial/technical/minimal/playful + default output directory + syntax theme + TOC behavior + optional logo/company; WCAG-AA-validated 12 CSS custom properties derived in HSL space; project > global > defaults precedence with MARKDOWN_HTML_NO_CONFIG=1 bypass). 6 stdlib-only Python tools (3 per skill), 6 references citing 5-7 sources each, 1 JSON schema asset. Inspired by Thariq Shihipar's Claude Code HTML output essay (Medium, 2026). Outputs are single self-contained .html files; only externals are Google Fonts CSS and Prism.js CDN. Converter sub-skills (md-document, md-review, md-slides) land in v2.10.1 follow-up PRs. Distinct from Anthropic's official Playground plugin (interactive prompt-tuning controls with sliders/knobs/prompt-copy-back) and marketing/landing/ (landing-page generator).",
+      "version": "2.10.0",
+      "author": {
+        "name": "Alireza Rezvani"
+      },
+      "keywords": [
+        "markdown",
+        "html",
+        "documentation",
+        "code-review",
+        "slides",
+        "design-system",
+        "single-file-html",
+        "brand-palette",
+        "wcag",
+        "onboarding",
+        "customization",
+        "shihipar",
+        "matt-pocock",
+        "grill-with-docs",
+        "context-fork"
+      ],
+      "category": "documentation"
     }
   ]
 }
