@@ -2,6 +2,7 @@
 name: wiki-ingest
 description: Ingest a source file from raw/ into the LLM Wiki — read, discuss, write summary page, update cross-references across 5-15 pages, regenerate index, append to log. Usage /wiki-ingest <path-to-source>
 ---
+<!-- canonical copy: engineering/llm-wiki/commands/wiki-ingest.md — keep in sync (root copy uses repo-root-relative script paths) -->
 
 # /wiki-ingest
 

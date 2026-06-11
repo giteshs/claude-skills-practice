@@ -1,6 +1,7 @@
 ---
 name: sprint-health
-description: Sprint health scoring and velocity analysis for agile teams. Usage: /sprint-health <analyze|velocity> [options]
+description: "Sprint health scoring and velocity analysis for agile teams. Usage: /sprint-health <analyze|velocity> [options]"
+argument-hint: "<analyze|velocity> [options]"
 ---
 
 # /sprint-health

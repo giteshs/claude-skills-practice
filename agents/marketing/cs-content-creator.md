@@ -1,6 +1,6 @@
 ---
 name: cs-content-creator
-description: AI-powered content creation specialist for brand voice consistency, SEO optimization, and multi-platform content strategy
+description: AI-powered content creation specialist for brand voice consistency, SEO optimization, and multi-platform content strategy. Use when producing or reviewing marketing content that must stay on-brand and rank — e.g., turning one pillar blog post into a LinkedIn/X/newsletter bundle, or auditing draft copy against an established brand voice profile before publishing.
 skills: marketing-skill/content-creator
 domain: marketing
 model: sonnet

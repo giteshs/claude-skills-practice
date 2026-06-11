@@ -4,6 +4,7 @@ description: |
   Scan and optimize documentation files for SEO. Audits README.md files and docs/ pages for
   meta tags, headings, keywords, readability, duplicate content, and broken links. Applies
   fixes, updates sitemap.xml, and generates a report. Usage: /seo-auditor [path]
+argument-hint: "[path]"
 ---
 
 # /seo-auditor
@@ -333,7 +334,7 @@ These pages rank well for their target keywords. Only fix critical issues (broke
 | Reference | Path | Use |
 |-----------|------|-----|
 | SEO Audit Framework | `marketing-skill/skills/seo-audit/references/seo-audit-reference.md` | Priority order for SEO fixes |
-| AI Search Optimization | `marketing-skill/skills/ai-seo/references/content-patterns.md` | Make content citable by AI |
+| AI Search Optimization | `marketing-skill/skills/aeo/references/extractable_content_patterns.md` | Make content citable by AI |
 | Content Optimization | `marketing-skill/skills/content-production/references/optimization-checklist.md` | Pre-publish checklist |
 | URL Design Guide | `marketing-skill/skills/site-architecture/references/url-design-guide.md` | URL structure best practices |
 | Internal Linking | `marketing-skill/skills/site-architecture/references/internal-linking-playbook.md` | Internal linking strategy |

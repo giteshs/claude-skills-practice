@@ -2,6 +2,7 @@
 name: karpathy-check
 description: Run Karpathy's 4-principle review on staged changes or the last commit. Checks complexity, diff noise, hidden assumptions, and goal verification. Usage /karpathy-check [--last-commit]
 ---
+<!-- canonical copy: engineering/karpathy-coder/commands/karpathy-check.md — keep in sync (root copy uses repo-root-relative script paths) -->
 
 # /karpathy-check
 

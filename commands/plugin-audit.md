@@ -5,6 +5,7 @@ description: |
   quality, security, marketplace compliance, cross-platform compatibility, and ecosystem integration.
   Runs all built-in validation tools, invokes domain-appropriate agents for code review,
   and produces a pass/fail gate report. Usage: /plugin-audit <skill-path>
+argument-hint: "<skill-path>"
 ---
 
 # /plugin-audit

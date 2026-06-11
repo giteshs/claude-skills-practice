@@ -1,6 +1,7 @@
 ---
 name: code-to-prd
-description: Reverse-engineer a frontend codebase into a PRD. Usage: /code-to-prd [path]
+description: "Reverse-engineer a frontend codebase into a PRD. Usage: /code-to-prd [path]"
+argument-hint: "[path]"
 ---
 
 # /code-to-prd
