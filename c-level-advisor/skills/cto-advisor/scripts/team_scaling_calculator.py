@@ -535,15 +535,14 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    if args.sample and args.input_file:
-        print("Warning: --sample specified; ignoring input_file", file=sys.stderr)
-
     if args.input_file and not args.sample:
         with open(args.input_file) as f:
             data = json.load(f)
         current_state = data["current_state"]
         growth_targets = data["growth_targets"]
     else:
+        if args.sample and args.input_file:
+            print("Warning: --sample specified; ignoring input_file", file=sys.stderr)
         current_state = {
             'headcount': 25,
             'velocity': 450,

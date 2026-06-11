@@ -643,7 +643,8 @@ Exit codes:
     parser.add_argument(
         "--sample",
         action="store_true",
-        help="Triage an embedded synthetic ransomware event (no file/stdin needed)",
+        help="Triage an embedded synthetic ransomware event (no file/stdin needed; "
+             "note: exits 2 — the SEV1 exit-code signal is intentional)",
     )
 
     args = parser.parse_args()
