@@ -146,11 +146,16 @@ def main(argv=None):
                 print(f"  {f['file']}")
                 print(f"      {f['detail']}")
         if stale_exceptions:
-            print("\nWARNING: exceptions listing files that no longer exist:")
+            print("\nERROR: exceptions listing files that no longer exist")
+            print("(remove them from scripts/smoke_exceptions.txt):")
             for f in stale_exceptions:
                 print(f"  {f}")
 
-    return 1 if failures else 0
+    if failures:
+        return 1
+    if stale_exceptions:
+        return 3
+    return 0
 
 
 if __name__ == "__main__":

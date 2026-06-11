@@ -60,7 +60,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: pr.number,
-              body: message.split('\n').map(l => l.trim()).join('\n'),
+              body: message,
             });
 
             if (!isMaintainer) {

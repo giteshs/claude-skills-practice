@@ -124,7 +124,9 @@ jobs:
           fi
           for f in $files; do
             echo "Auditing $f"
-            safety check --full-report --file "$f" || true
+            if ! safety check --full-report --file "$f"; then
+              echo "::warning file=$f::safety found vulnerabilities in $f (advisory)"
+            fi
           done
 
       - name: Markdown link spot-check

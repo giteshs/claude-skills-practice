@@ -19,6 +19,7 @@ Usage:
 """
 
 import argparse
+import fnmatch
 import json
 import os
 import re
@@ -135,7 +136,6 @@ def load_allowlist(repo_root: str):
 
 
 def allowlisted(rel_file: str, candidate: str, allowlist) -> bool:
-    import fnmatch
     return any(
         fnmatch.fnmatch(rel_file, fg) and fnmatch.fnmatch(candidate, cg)
         for fg, cg in allowlist
