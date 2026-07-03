@@ -16,7 +16,7 @@
     {
       "name": "agent-harness",
       "path": "engineering/agent-harness/skills/agent-harness",
-      "description": "Turn any domain folder of skills into a bounded agentic loop: compile a goal into a verifiable task plan, execute tasks with the domain's own tools, verify every task with machine-run checks, retry with caps, escalate to a human when budgets exhaust, and refuse to close until everything is verified or explicitly waived. Use when you want an agent or subagent to pick up a goal and drive it to a verified close across one of this repo's 18 domains ('run this goal through the engineering harness', 'set up an agentic loop for marketing work', 'make the finance domain self-verifying'). NOT for autho",
+      "description": "Turn any domain folder of skills into a bounded agentic loop: compile a goal into a verifiable task plan, execute tasks with the domain's own tools, verify every task with machine-run checks, retry with caps, escalate to a human when budgets exhaust, and refuse to close until everything is verified or explicitly waived. Use when you want an agent or subagent to pick up a goal and drive it to a verified close across one of this repo's 18 domains ('run this goal through the engineering harness', 'set up an agentic loop for marketing work', 'make the finance domain self-verifying'). NOT for \u2026",
       "tools": [
         {
           "script": "engineering/agent-harness/skills/agent-harness/scripts/goal_compiler.py",
@@ -470,7 +470,7 @@
     {
       "name": "chaos-engineering",
       "path": "engineering/chaos-engineering/skills/chaos-engineering",
-      "description": "Use when planning, running, or learning from chaos engineering experiments. Triggers on \"chaos experiment\", \"fault injection\", \"gameday\", \"resilience test\", \"blast radius\", \"steady state\", \"abort criteria\", \"Chaos Toolkit\", \"Chaos Mesh\", \"Litmus\", \"Gremlin\", \"AWS FIS\", or any deliberate failure-injection question. Ships experiment designer, blast-radius calculator, and postmortem generator (all stdlib Python), 4 references on chaos principles + experiment design + attack taxonomy + tooling landscape, and a /chaos-experiment slash command. Composes with feature-flags-architect (kill switches as",
+      "description": "Use when planning, running, or learning from chaos engineering experiments. Triggers on \"chaos experiment\", \"fault injection\", \"gameday\", \"resilience test\", \"blast radius\", \"steady state\", \"abort criteria\", \"Chaos Toolkit\", \"Chaos Mesh\", \"Litmus\", \"Gremlin\", \"AWS FIS\", or any deliberate failure-injection question. Ships experiment designer, blast-radius calculator, and postmortem generator (all stdlib Python), 4 references on chaos principles + experiment design + attack taxonomy + tooling landscape, and a /chaos-experiment slash command. Composes with feature-flags-architect (kill switches \u2026",
       "tools": [
         {
           "script": "engineering/chaos-engineering/skills/chaos-engineering/scripts/blast_radius_calculator.py",
@@ -1146,7 +1146,7 @@
     {
       "name": "llm-cost-optimizer",
       "path": "engineering/llm-cost-optimizer/skills/llm-cost-optimizer",
-      "description": "Use proactively whenever LLM API costs come up -- or should. Triggers include: 'my AI costs are too high', 'optimize token usage', 'which model should I use', 'LLM spend is out of control', 'implement prompt caching', 'we're about to launch an AI feature', 'build me an AI endpoint'. Don't wait for an explicit cost complaint -- if someone is building an AI feature, designing an LLM endpoint, or choosing between models, cost architecture belongs in the conversation. Apply immediately when any of these are true: a system prompt appears that exceeds a few hundred tokens, all requests are hitting t",
+      "description": "Use proactively whenever LLM API costs come up -- or should. Triggers include: 'my AI costs are too high', 'optimize token usage', 'which model should I use', 'LLM spend is out of control', 'implement prompt caching', 'we're about to launch an AI feature', 'build me an AI endpoint'. Don't wait for an explicit cost complaint -- if someone is building an AI feature, designing an LLM endpoint, or choosing between models, cost architecture belongs in the conversation. Apply immediately when any of these are true: a system prompt appears that exceeds a few hundred tokens, all requests are \u2026",
       "tools": [],
       "agentic_signals": {
         "goal_intake": false,
@@ -1294,7 +1294,7 @@
     {
       "name": "security-guidance",
       "path": "engineering/security-guidance/skills/security-guidance",
-      "description": "PreToolUse security-anti-pattern hook for Claude Code. Catches 12 common security risks (command injection, XSS, SQL injection, unsafe deserialization, GitHub Actions workflow injection, eval/new Function code injection) BEFORE the Edit/Write/MultiEdit operation completes. Session-state caching prevents duplicate warnings on the same file+rule combo. Stdlib only \u2014 no dependencies. Use when you want a safety net during Claude Code sessions that touch security-sensitive code (auth, payments, user input handling, IaC). Disable with ENABLE_SECURITY_REMINDER=0 if you need to perform a verified-safe",
+      "description": "PreToolUse security-anti-pattern hook for Claude Code. Catches 12 common security risks (command injection, XSS, SQL injection, unsafe deserialization, GitHub Actions workflow injection, eval/new Function code injection) BEFORE the Edit/Write/MultiEdit operation completes. Session-state caching prevents duplicate warnings on the same file+rule combo. Stdlib only \u2014 no dependencies. Use when you want a safety net during Claude Code sessions that touch security-sensitive code (auth, payments, user input handling, IaC). Disable with ENABLE_SECURITY_REMINDER=0 if you need to perform a \u2026",
       "tools": [],
       "agentic_signals": {
         "goal_intake": false,
@@ -1580,7 +1580,7 @@
     {
       "name": "chaos-engineering",
       "path": "engineering/skills/chaos-engineering",
-      "description": "Use when planning, running, or learning from chaos engineering experiments. Triggers on \"chaos experiment\", \"fault injection\", \"gameday\", \"resilience test\", \"blast radius\", \"steady state\", \"abort criteria\", \"Chaos Toolkit\", \"Chaos Mesh\", \"Litmus\", \"Gremlin\", \"AWS FIS\", or any deliberate failure-injection question. Ships experiment designer, blast-radius calculator, and postmortem generator (all stdlib Python), 4 references on chaos principles + experiment design + attack taxonomy + tooling landscape, and a /chaos-experiment slash command. Composes with feature-flags-architect (kill switches as",
+      "description": "Use when planning, running, or learning from chaos engineering experiments. Triggers on \"chaos experiment\", \"fault injection\", \"gameday\", \"resilience test\", \"blast radius\", \"steady state\", \"abort criteria\", \"Chaos Toolkit\", \"Chaos Mesh\", \"Litmus\", \"Gremlin\", \"AWS FIS\", or any deliberate failure-injection question. Ships experiment designer, blast-radius calculator, and postmortem generator (all stdlib Python), 4 references on chaos principles + experiment design + attack taxonomy + tooling landscape, and a /chaos-experiment slash command. Composes with feature-flags-architect (kill switches \u2026",
       "tools": [
         {
           "script": "engineering/skills/chaos-engineering/scripts/blast_radius_calculator.py",
@@ -2678,7 +2678,7 @@
     {
       "name": "slo-architect",
       "path": "engineering/skills/slo-architect",
-      "description": "Use when defining, reviewing, or operating SLOs/SLIs/error budgets. Triggers on \"define an SLO\", \"what should our SLO be\", \"error budget\", \"burn rate\", \"SLI\", \"service level objective\", \"Google SRE workbook\", \"multi-window burn-rate alert\", or any reliability-target question. Ships SLO designer, error-budget calculator with multi-window burn-rate thresholds, and SLO reviewer that catches the common bugs (target too aggressive, window too short, conflicting SLOs, no SLI definition). 4 references on SLO principles + SLI design + error budget math + composition with feature-flags-architect/chaos-",
+      "description": "Use when defining, reviewing, or operating SLOs/SLIs/error budgets. Triggers on \"define an SLO\", \"what should our SLO be\", \"error budget\", \"burn rate\", \"SLI\", \"service level objective\", \"Google SRE workbook\", \"multi-window burn-rate alert\", or any reliability-target question. Ships SLO designer, error-budget calculator with multi-window burn-rate thresholds, and SLO reviewer that catches the common bugs (target too aggressive, window too short, conflicting SLOs, no SLI definition). 4 references on SLO principles + SLI design + error budget math + composition with \u2026",
       "tools": [
         {
           "script": "engineering/skills/slo-architect/scripts/error_budget_calculator.py",
@@ -2989,7 +2989,7 @@
     {
       "name": "slo-architect",
       "path": "engineering/slo-architect/skills/slo-architect",
-      "description": "Use when defining, reviewing, or operating SLOs/SLIs/error budgets. Triggers on \"define an SLO\", \"what should our SLO be\", \"error budget\", \"burn rate\", \"SLI\", \"service level objective\", \"Google SRE workbook\", \"multi-window burn-rate alert\", or any reliability-target question. Ships SLO designer, error-budget calculator with multi-window burn-rate thresholds, and SLO reviewer that catches the common bugs (target too aggressive, window too short, conflicting SLOs, no SLI definition). 4 references on SLO principles + SLI design + error budget math + composition with feature-flags-architect/chaos-",
+      "description": "Use when defining, reviewing, or operating SLOs/SLIs/error budgets. Triggers on \"define an SLO\", \"what should our SLO be\", \"error budget\", \"burn rate\", \"SLI\", \"service level objective\", \"Google SRE workbook\", \"multi-window burn-rate alert\", or any reliability-target question. Ships SLO designer, error-budget calculator with multi-window burn-rate thresholds, and SLO reviewer that catches the common bugs (target too aggressive, window too short, conflicting SLOs, no SLI definition). 4 references on SLO principles + SLI design + error budget math + composition with \u2026",
       "tools": [
         {
           "script": "engineering/slo-architect/skills/slo-architect/scripts/error_budget_calculator.py",

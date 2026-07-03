@@ -87,7 +87,8 @@ Scores AR1·AR2·AR3·AR4·AR5·AR6 (post-PR where this PR changed the skill).
   `--text "hello world"` exits 3. `jira_snapshot_bridge.py --input
   assets/sample_jira_snapshot.json --to flow --forecast 20` exits 0 and matches
   `assets/expected_flow_metrics.json` (p50=9, p85=14, p95=16 days; 90.9% SLE conformance;
-  aging alert on PHX-112; forecast p85 = 12 weeks); `--to sprint` output runs
+  aging alert on PHX-112; forecast p85 = 10 weeks, sampled over zero-filled observed
+  weeks); `--to sprint` output runs
   `velocity_analyzer.py` to exit 0 (avg 11.8 pts over 4 sprints); a 2-sprint snapshot
   exits 5. `delivery_loop_gate.py --sample` exits 0; sample plan passes `--mode plan`
   (exit 0) and is refused by `--mode close` (exit 4, T2 in_progress).

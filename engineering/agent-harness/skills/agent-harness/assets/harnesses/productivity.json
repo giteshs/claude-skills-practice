@@ -16,7 +16,7 @@
     {
       "name": "andreessen",
       "path": "productivity/andreessen/skills/andreessen",
-      "description": "Marc Andreessen-mode decision and productivity skill. A blunt, market-first operator that pressure-tests ideas, ventures, features, and career bets through Andreessen's actual frameworks \u2014 market dominates team and product; the only milestone that matters is product/market fit; bias to build over deliberate. Use when the user says 'andreessen', 'pmarca mode', 'should I build this', 'is there a market', 'are we at product/market fit', 'pmf check', 'pressure-test this idea', 'be brutal about this venture', 'market-first take', or wants a no-disclaimers, no-hedging, confidence-leveled verdict on ",
+      "description": "Marc Andreessen-mode decision and productivity skill. A blunt, market-first operator that pressure-tests ideas, ventures, features, and career bets through Andreessen's actual frameworks \u2014 market dominates team and product; the only milestone that matters is product/market fit; bias to build over deliberate. Use when the user says 'andreessen', 'pmarca mode', 'should I build this', 'is there a market', 'are we at product/market fit', 'pmf check', 'pressure-test this idea', 'be brutal about this venture', 'market-first take', or wants a no-disclaimers, no-hedging, confidence-leveled verdict \u2026",
       "tools": [
         {
           "script": "productivity/andreessen/skills/andreessen/scripts/anti_todo_card.py",
@@ -87,7 +87,7 @@
     {
       "name": "capture",
       "path": "productivity/capture/skills/capture",
-      "description": "Captures and organizes chaotic brain dumps into a structured, actionable system with zero information loss. Use this skill whenever the user says 'capture this', 'brain dump', 'let me dump some ideas', 'I've got a bunch of thoughts', 'here's everything on my mind', 'idea dump', 'let me get this out of my head', 'I need to organize my thoughts', 'here's what I'm thinking', or any variation where someone is unloading a messy stream of ideas, tasks, thoughts, and plans wanting them turned into something coherent. Also trigger when the user pastes or dictates a long, unstructured block of mixed id",
+      "description": "Captures and organizes chaotic brain dumps into a structured, actionable system with zero information loss. Use this skill whenever the user says 'capture this', 'brain dump', 'let me dump some ideas', 'I've got a bunch of thoughts', 'here's everything on my mind', 'idea dump', 'let me get this out of my head', 'I need to organize my thoughts', 'here's what I'm thinking', or any variation where someone is unloading a messy stream of ideas, tasks, thoughts, and plans wanting them turned into something coherent. Also trigger when the user pastes or dictates a long, unstructured block of mixed \u2026",
       "tools": [
         {
           "script": "productivity/capture/skills/capture/scripts/complexity_estimator.py",
@@ -157,7 +157,7 @@
     {
       "name": "inbox-setup",
       "path": "productivity/email/skills/inbox-setup",
-      "description": "One-time setup skill that builds a personalized inbox triage knowledge base via interactive interview. Interviews the user about their email patterns, business context, reply style, and priorities using grill-me discipline (one question at a time, forcing format where possible, dependency-ordered, each question explains why I'm asking), then generates the knowledge base files that power the companion 'inbox-triage' skill. Run this once before using inbox-triage for the first time. Re-run when business, pricing, or priorities change significantly. Triggers: 'set up my inbox', 'configure inbox t",
+      "description": "One-time setup skill that builds a personalized inbox triage knowledge base via interactive interview. Interviews the user about their email patterns, business context, reply style, and priorities using grill-me discipline (one question at a time, forcing format where possible, dependency-ordered, each question explains why I'm asking), then generates the knowledge base files that power the companion 'inbox-triage' skill. Run this once before using inbox-triage for the first time. Re-run when business, pricing, or priorities change significantly. Triggers: 'set up my inbox', 'configure \u2026",
       "tools": [
         {
           "script": "productivity/email/skills/inbox-setup/scripts/kb_validator.py",
@@ -222,7 +222,7 @@
     {
       "name": "inbox-triage",
       "path": "productivity/email/skills/inbox-triage",
-      "description": "Runs a full inbox triage using the knowledge base created by the 'inbox-setup' skill. Light-intake by design (most invocations skip questions and run with KB-default preferences); asks at most 2 grill-me override questions when invocation is outside normal cadence or includes category-skip intent. Searches recent emails, classifies them via the user's taxonomy, researches new senders, generates recommendations, drafts replies (NEVER sends), delivers a report in the user's preferred format, and updates the knowledge base with learnings. Designed to run on a recurring schedule (1-3x daily) or on",
+      "description": "Runs a full inbox triage using the knowledge base created by the 'inbox-setup' skill. Light-intake by design (most invocations skip questions and run with KB-default preferences); asks at most 2 grill-me override questions when invocation is outside normal cadence or includes category-skip intent. Searches recent emails, classifies them via the user's taxonomy, researches new senders, generates recommendations, drafts replies (NEVER sends), delivers a report in the user's preferred format, and updates the knowledge base with learnings. Designed to run on a recurring schedule (1-3x daily) or \u2026",
       "tools": [
         {
           "script": "productivity/email/skills/inbox-triage/scripts/draft_safety_validator.py",
@@ -287,7 +287,7 @@
     {
       "name": "handoff",
       "path": "productivity/handoff/skills/handoff",
-      "description": "Compact the current conversation into a handoff document for another agent to pick up. Save to a user-configured location (OS temp, home folder, or per-project .handoff/), redact secrets before write, suggest skills for the next session, and auto-load the latest handoff on the next SessionStart. First-run setup asks where to save so the project folder never gets cluttered. Use when the user says 'hand this off', 'handoff doc', 'summarize this for a new session', 'compact this conversation', 'I'm ending this session', 'pick this up later', or any variation signaling intent to pass work to a fre",
+      "description": "Compact the current conversation into a handoff document for another agent to pick up. Save to a user-configured location (OS temp, home folder, or per-project .handoff/), redact secrets before write, suggest skills for the next session, and auto-load the latest handoff on the next SessionStart. First-run setup asks where to save so the project folder never gets cluttered. Use when the user says 'hand this off', 'handoff doc', 'summarize this for a new session', 'compact this conversation', 'I'm ending this session', 'pick this up later', or any variation signaling intent to pass work to a \u2026",
       "tools": [
         {
           "script": "productivity/handoff/skills/handoff/scripts/cleanup.py",
@@ -427,7 +427,7 @@
     {
       "name": "reflect",
       "path": "productivity/reflect/skills/reflect",
-      "description": "Mid-conversation reflection skill that pauses execution and zooms out from detail-mode to honestly reassess direction, assumptions, and bias. Use when the user says 'reflect', 'take a step back', 'step back', 'zoom out', 'are we missing something', 'bigger picture', 'sanity check this', 'are we on track', 'are we overthinking this', 'forest for the trees', or any variation signaling intent to break out of detail-mode and reassess. Also trigger when the conversation has gone deep on implementation details without strategic check-in, or when the user shows signs of being stuck \u2014 that's often a s",
+      "description": "Mid-conversation reflection skill that pauses execution and zooms out from detail-mode to honestly reassess direction, assumptions, and bias. Use when the user says 'reflect', 'take a step back', 'step back', 'zoom out', 'are we missing something', 'bigger picture', 'sanity check this', 'are we on track', 'are we overthinking this', 'forest for the trees', or any variation signaling intent to break out of detail-mode and reassess. Also trigger when the conversation has gone deep on implementation details without strategic check-in, or when the user shows signs of being stuck \u2014 that's often \u2026",
       "tools": [
         {
           "script": "productivity/reflect/skills/reflect/scripts/bias_pattern_detector.py",

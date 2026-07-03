@@ -163,7 +163,7 @@
     {
       "name": "meeting-analyzer",
       "path": "project-management/skills/meeting-analyzer",
-      "description": "Analyzes meeting transcripts and recordings to surface behavioral patterns, communication anti-patterns, and actionable coaching feedback. Use this skill whenever the user uploads or points to meeting transcripts (.txt, .md, .vtt, .srt, .docx), asks about their communication habits, wants feedback on how they run meetings, requests speaking ratio analysis, mentions filler words or conflict avoidance, or wants to compare their communication across time periods. Also trigger when users mention tools like Granola, Otter, Fireflies, or Zoom transcripts. Even if the user just says \"look at my meeti",
+      "description": "Analyzes meeting transcripts and recordings to surface behavioral patterns, communication anti-patterns, and actionable coaching feedback. Use this skill whenever the user uploads or points to meeting transcripts (.txt, .md, .vtt, .srt, .docx), asks about their communication habits, wants feedback on how they run meetings, requests speaking ratio analysis, mentions filler words or conflict avoidance, or wants to compare their communication across time periods. Also trigger when users mention tools like Granola, Otter, Fireflies, or Zoom transcripts. Even if the user just says \"look at my \u2026",
       "tools": [],
       "agentic_signals": {
         "goal_intake": false,
@@ -177,7 +177,7 @@
     {
       "name": "pm-skills",
       "path": "project-management/skills/pm-skills",
-      "description": "Use when coordinating project-delivery work across the 8 project-management sub-skills \u2014 sprint/velocity analytics, portfolio health, Jira/JQL, Confluence, Atlassian admin, templates, meeting analysis, team comms. Triggers on 'our sprints feel off', 'project health report', 'audit our Jira permissions', 'when will it be done', 'run the delivery loop'. Forks context to route to one sub-skill via a deterministic signal router and returns a digest; can also drive a full goal\u2192plan\u2192execute\u2192verify\u2192close delivery loop through the repo-wide agent-harness with Jira MCP data bridged into the domain's an",
+      "description": "Use when coordinating project-delivery work across the 8 project-management sub-skills \u2014 sprint/velocity analytics, portfolio health, Jira/JQL, Confluence, Atlassian admin, templates, meeting analysis, team comms. Triggers on 'our sprints feel off', 'project health report', 'audit our Jira permissions', 'when will it be done', 'run the delivery loop'. Forks context to route to one sub-skill via a deterministic signal router and returns a digest; can also drive a full goal\u2192plan\u2192execute\u2192verify\u2192close delivery loop through the repo-wide agent-harness with Jira MCP data bridged into the domain's \u2026",
       "tools": [
         {
           "script": "project-management/skills/pm-skills/scripts/delivery_loop_gate.py",
@@ -247,7 +247,7 @@
     {
       "name": "scrum-master",
       "path": "project-management/skills/scrum-master",
-      "description": "Advanced Scrum Master skill for data-driven agile team analysis and coaching. Use when the user asks about sprint planning, velocity tracking, retrospectives, standup facilitation, backlog grooming, story points, burndown charts, blocker resolution, or agile team health. Runs Python scripts to analyse sprint JSON exports from Jira or similar tools: velocity_analyzer.py for Monte Carlo sprint forecasting, sprint_health_scorer.py for multi-dimension health scoring, and retrospective_analyzer.py for action-item and theme tracking. Produces confidence-interval forecasts, health grade reports, and ",
+      "description": "Advanced Scrum Master skill for data-driven agile team analysis and coaching. Use when the user asks about sprint planning, velocity tracking, retrospectives, standup facilitation, backlog grooming, story points, burndown charts, blocker resolution, or agile team health. Runs Python scripts to analyse sprint JSON exports from Jira or similar tools: velocity_analyzer.py for Monte Carlo sprint forecasting, sprint_health_scorer.py for multi-dimension health scoring, and retrospective_analyzer.py for action-item and theme tracking. Produces confidence-interval forecasts, health grade reports \u2026",
       "tools": [
         {
           "script": "project-management/skills/scrum-master/scripts/retrospective_analyzer.py",
@@ -302,7 +302,7 @@
     {
       "name": "senior-pm",
       "path": "project-management/skills/senior-pm",
-      "description": "Senior Project Manager for enterprise software, SaaS, and digital transformation projects. Specializes in portfolio management, quantitative risk analysis, resource optimization, stakeholder alignment, and executive reporting. Uses advanced methodologies including EMV analysis, Monte Carlo simulation, WSJF prioritization, and multi-dimensional health scoring. Use when a user needs help with project plans, project status reports, risk assessments, resource allocation, project roadmaps, milestone tracking, team capacity planning, portfolio health reviews, program management, or executive-level p",
+      "description": "Senior Project Manager for enterprise software, SaaS, and digital transformation projects. Specializes in portfolio management, quantitative risk analysis, resource optimization, stakeholder alignment, and executive reporting. Uses advanced methodologies including EMV analysis, Monte Carlo simulation, WSJF prioritization, and multi-dimensional health scoring. Use when a user needs help with project plans, project status reports, risk assessments, resource allocation, project roadmaps, milestone tracking, team capacity planning, portfolio health reviews, program management, or \u2026",
       "tools": [
         {
           "script": "project-management/skills/senior-pm/scripts/project_health_dashboard.py",
@@ -357,7 +357,7 @@
     {
       "name": "team-communications",
       "path": "project-management/skills/team-communications",
-      "description": "Write internal company communications \u2014 3P updates (Progress/Plans/Problems), company-wide newsletters, FAQ roundups, incident reports, leadership updates, status reports, project updates, and general internal comms. Use this skill any time the user asks to draft, edit, or format something meant for internal audiences. Trigger on keywords like \"3P\", \"weekly update\", \"newsletter\", \"FAQ\", \"internal comms\", \"status report\", \"company update\", \"team update\", \"incident report\", or any request to summarize work for leadership, teammates, or the broader company. Even casual requests like \"write my upd",
+      "description": "Write internal company communications \u2014 3P updates (Progress/Plans/Problems), company-wide newsletters, FAQ roundups, incident reports, leadership updates, status reports, project updates, and general internal comms. Use this skill any time the user asks to draft, edit, or format something meant for internal audiences. Trigger on keywords like \"3P\", \"weekly update\", \"newsletter\", \"FAQ\", \"internal comms\", \"status report\", \"company update\", \"team update\", \"incident report\", or any request to summarize work for leadership, teammates, or the broader company. Even casual requests like \"write my \u2026",
       "tools": [],
       "agentic_signals": {
         "goal_intake": true,

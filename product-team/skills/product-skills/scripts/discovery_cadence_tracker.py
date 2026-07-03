@@ -154,18 +154,16 @@ def main() -> int:
     else:
         ap.error("--input is required (or use --sample)")
 
-    interviews = [i for i in log.get("interviews", []) if parse_date(i.get("date"))]
-    if len(interviews) < 2:
-        print("REFUSED: fewer than 2 dated interviews in the log — there is no cadence to "
-              "measure yet. Book the first two weekly touchpoints, then re-run.",
-              file=sys.stderr)
+    interview_dates = [d for d in
+                       (parse_date(i.get("date")) for i in log.get("interviews", [])) if d]
+    all_dates = interview_dates + [
+        d for d in (parse_date(t.get("date")) for t in log.get("assumption_tests", [])) if d]
+    as_of = parse_date(args.as_of) if args.as_of else (max(all_dates) if all_dates else None)
+    if as_of is None or sum(1 for d in interview_dates if d <= as_of) < 2:
+        print("REFUSED: fewer than 2 dated interviews on or before the analysis date — "
+              "there is no cadence to measure yet. Book the first two weekly touchpoints "
+              "(or widen --as-of), then re-run.", file=sys.stderr)
         return 5
-
-    as_of = parse_date(args.as_of) if args.as_of else max(
-        d for d in
-        [parse_date(i.get("date")) for i in log.get("interviews", [])] +
-        [parse_date(t.get("date")) for t in log.get("assumption_tests", [])]
-        if d)
     report = analyze(log, as_of)
 
     if args.output == "json":

@@ -634,7 +634,7 @@
     {
       "name": "epic-design",
       "path": "engineering-team/skills/epic-design",
-      "description": "> Build immersive, cinematic 2.5D interactive websites using scroll storytelling, parallax depth, text animations, and premium scroll effects \u2014 no WebGL required. Use this skill for any web design task: landing pages, product sites, hero sections, scroll animations, parallax, sticky sections, section overlaps, floating products between sections, clip-path reveals, text that flies in from sides, words that light up on scroll, curtain drops, iris opens, card stacks, bleed typography, and any site that should feel cinematic or premium. Trigger on phrases like \"make it feel alive\", \"Apple-style an",
+      "description": "> Build immersive, cinematic 2.5D interactive websites using scroll storytelling, parallax depth, text animations, and premium scroll effects \u2014 no WebGL required. Use this skill for any web design task: landing pages, product sites, hero sections, scroll animations, parallax, sticky sections, section overlaps, floating products between sections, clip-path reveals, text that flies in from sides, words that light up on scroll, curtain drops, iris opens, card stacks, bleed typography, and any site that should feel cinematic or premium. Trigger on phrases like \"make it feel alive\", \"Apple-style \u2026",
       "tools": [
         {
           "script": "engineering-team/skills/epic-design/scripts/inspect-assets.py",
@@ -1220,7 +1220,7 @@
     {
       "name": "senior-data-scientist",
       "path": "engineering-team/skills/senior-data-scientist",
-      "description": "World-class senior data scientist skill specialising in statistical modeling, experiment design, causal inference, and predictive analytics. Covers A/B testing (sample sizing, two-proportion z-tests, Bonferroni correction), difference-in-differences, feature engineering pipelines (Scikit-learn, XGBoost), cross-validated model evaluation (AUC-ROC, AUC-PR, SHAP), and MLflow experiment tracking \u2014 using Python (NumPy, Pandas, Scikit-learn), R, and SQL. Use when designing or analysing controlled experiments, building and evaluating classification or regression models, performing causal analysis on ",
+      "description": "World-class senior data scientist skill specialising in statistical modeling, experiment design, causal inference, and predictive analytics. Covers A/B testing (sample sizing, two-proportion z-tests, Bonferroni correction), difference-in-differences, feature engineering pipelines (Scikit-learn, XGBoost), cross-validated model evaluation (AUC-ROC, AUC-PR, SHAP), and MLflow experiment tracking \u2014 using Python (NumPy, Pandas, Scikit-learn), R, and SQL. Use when designing or analysing controlled experiments, building and evaluating classification or regression models, performing causal analysis \u2026",
       "tools": [
         {
           "script": "engineering-team/skills/senior-data-scientist/scripts/experiment_designer.py",
@@ -1631,7 +1631,7 @@
     {
       "name": "senior-secops",
       "path": "engineering-team/skills/senior-secops",
-      "description": "Senior SecOps engineer skill for application security, vulnerability management, compliance verification, and secure development practices. Runs SAST/DAST scans, generates CVE remediation plans, checks dependency vulnerabilities, creates security policies, enforces secure coding patterns, and automates compliance checks against SOC2, PCI-DSS, HIPAA, and GDPR. Use when conducting a security review or audit, responding to a CVE or security incident, hardening infrastructure, implementing authentication or secrets management, running penetration test prep, checking OWASP Top 10 exposure, or enfor",
+      "description": "Senior SecOps engineer skill for application security, vulnerability management, compliance verification, and secure development practices. Runs SAST/DAST scans, generates CVE remediation plans, checks dependency vulnerabilities, creates security policies, enforces secure coding patterns, and automates compliance checks against SOC2, PCI-DSS, HIPAA, and GDPR. Use when conducting a security review or audit, responding to a CVE or security incident, hardening infrastructure, implementing authentication or secrets management, running penetration test prep, checking OWASP Top 10 exposure, or \u2026",
       "tools": [
         {
           "script": "engineering-team/skills/senior-secops/scripts/compliance_checker.py",

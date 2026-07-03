@@ -44,10 +44,10 @@
     "items": 20,
     "method": "Monte Carlo over historical weekly throughput (10k trials, seeded)",
     "weeks": {
-      "p50": 11,
-      "p70": 12,
-      "p85": 12,
-      "p95": 13
+      "p50": 9,
+      "p70": 10,
+      "p85": 10,
+      "p95": 10
     }
   }
 }

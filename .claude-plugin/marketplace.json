@@ -8,8 +8,8 @@
   "homepage": "https://github.com/alirezarezvani/claude-skills",
   "repository": "https://github.com/alirezarezvani/claude-skills",
   "metadata": {
-    "description": "355 production-ready skills across 18 domains (engineering, engineering-core, marketing, product, c-level, compliance-os, project management, RA/QM, business growth, finance, productivity, marketing top-level, research, research-ops, business-operations, commercial, markdown-html, loop-library, plus standards). 602 Python tools, 731 reference guides, 99 agents (cs-* + personas), 109 slash commands across 83 marketplace plugins. v2.10.4 turns product-team and project-management into agent-harness domains: fork-orchestrators with deterministic goal routers, a Jira MCP snapshot bridge (Kanban flow metrics + Monte Carlo forecasting), a delegation-governance loop gate, a continuous-discovery cadence tracker, and an Opportunity Solution Tree linter, with /cs:pm and /cs:product command families. v2.10.3 completes the markdown-html domain with md-slides — slide-deck converter (arrow-key / Space / PgDn / Home/End / P keyboard navigation + presenter mode with split-view clock + speaker notes + next-slide preview + URL-hash deep linking like #3 for direct slide jumps + @media print page-per-slide for browser-native PDF export). Reuses md-document's markdown parser; vanilla JS only (no framework runtime); Prism.js opt-in via --syntax. Joins md-review (v2.10.2 code-review converter), md-document (v2.10.1 long-form converter), and the v2.10.0 foundation (orchestrator + design-system). Compatible with Claude Code, Codex CLI, Gemini CLI, Cursor, OpenClaw, Hermes Agent, Mistral Vibe, and 5 more coding agents.",
-    "version": "2.10.3"
+    "description": "355 production-ready skills across 18 domains (engineering, engineering-core, marketing, product, c-level, compliance-os, project management, RA/QM, business growth, finance, productivity, marketing top-level, research, research-ops, business-operations, commercial, markdown-html, loop-library, plus standards). 602 Python tools, 731 reference guides, 99 agents (cs-* + personas), 109 slash commands across 83 marketplace plugins. v2.11.1 turns product-team and project-management into agent-harness domains: fork-orchestrators with deterministic goal routers, a Jira MCP snapshot bridge (Kanban flow metrics + Monte Carlo forecasting), a delegation-governance loop gate, a continuous-discovery cadence tracker, and an Opportunity Solution Tree linter, with /cs:pm and /cs:product command families. v2.10.3 completes the markdown-html domain with md-slides — slide-deck converter (arrow-key / Space / PgDn / Home/End / P keyboard navigation + presenter mode with split-view clock + speaker notes + next-slide preview + URL-hash deep linking like #3 for direct slide jumps + @media print page-per-slide for browser-native PDF export). Reuses md-document's markdown parser; vanilla JS only (no framework runtime); Prism.js opt-in via --syntax. Joins md-review (v2.10.2 code-review converter), md-document (v2.10.1 long-form converter), and the v2.10.0 foundation (orchestrator + design-system). Compatible with Claude Code, Codex CLI, Gemini CLI, Cursor, OpenClaw, Hermes Agent, Mistral Vibe, and 5 more coding agents.",
+    "version": "2.11.1"
   },
   "plugins": [
     {
@@ -317,7 +317,7 @@
       "name": "product-skills",
       "source": "./product-team",
       "description": "13 bundled product skills with 22 Python tools: product-skills fork-orchestrator with continuous-discovery loop (deterministic 16-lane router, Torres cadence tracker, OST linter, /cs:product + /cs:grill-product + /cs:product-loop), product manager toolkit (RICE, PRDs), product strategist, UX researcher, UI design system, competitive teardown, landing page generator, SaaS scaffolder, product analytics, experiment designer, product discovery, roadmap communicator, spec-to-repo. Companion standalone plugins: agile-product-owner, code-to-prd, apple-hig-expert, research-summarizer.",
-      "version": "2.10.4",
+      "version": "2.11.1",
       "author": {
         "name": "Alireza Rezvani"
       },
@@ -344,7 +344,7 @@
       "name": "pm-skills",
       "source": "./project-management",
       "description": "9 project management skills with 15 Python tools: pm-skills fork-orchestrator with agentic delivery loop (deterministic 8-lane router, Jira MCP snapshot bridge to Kanban flow metrics + Monte Carlo forecasts, delegation-governance gate, /cs:pm + /cs:grill-pm + /cs:pm-loop), senior PM, scrum master, Jira expert, Confluence expert, Atlassian admin, template creator, meeting analyzer, team communications. Bundled Atlassian Remote MCP.",
-      "version": "2.10.4",
+      "version": "2.11.1",
       "author": {
         "name": "Alireza Rezvani"
       },

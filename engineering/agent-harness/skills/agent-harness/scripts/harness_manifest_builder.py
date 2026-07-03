@@ -55,6 +55,16 @@ def read_text(path):
         return ""
 
 
+def truncate_words(text, limit):
+    """Cap at `limit` chars, cutting on a word boundary with an ellipsis marker."""
+    if len(text) <= limit:
+        return text
+    cut = text[:limit - 2]
+    if " " in cut:
+        cut = cut.rsplit(" ", 1)[0]
+    return cut.rstrip(",;:") + " …"
+
+
 def parse_frontmatter(text):
     """Extract name/description from YAML frontmatter without a YAML dep."""
     meta = {"name": "", "description": ""}
@@ -123,7 +133,7 @@ def scan_skill(skill_dir, skill_md, repo_root):
     return {
         "name": meta["name"] or os.path.basename(skill_dir),
         "path": rel_dir,
-        "description": meta["description"][:600],
+        "description": truncate_words(meta["description"], 600),
         "tools": tools,
         "agentic_signals": signals,
         "references": sorted(os.listdir(os.path.join(skill_dir, "references")))

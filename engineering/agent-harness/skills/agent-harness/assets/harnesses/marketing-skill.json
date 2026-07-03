@@ -76,7 +76,7 @@
     {
       "name": "aeo",
       "path": "marketing-skill/skills/aeo",
-      "description": "Answer Engine Optimization (AEO) skill \u2014 optimize content to be cited by AI language models (ChatGPT, Perplexity, Claude, Gemini, Mistral) as authoritative sources. Distinct from SEO \u2014 AEO optimizes for citation in LLM-generated responses, not search rankings. Use when planning content for AI-first search audiences, auditing existing content for E-E-A-T signals, tracking which pages get cited by which LLMs, or building a citation-friendly content strategy. Triggers \u2014 'AEO audit', 'optimize for ChatGPT', 'get cited by Perplexity', 'LLM citation strategy', 'answer engine optimization', 'content ",
+      "description": "Answer Engine Optimization (AEO) skill \u2014 optimize content to be cited by AI language models (ChatGPT, Perplexity, Claude, Gemini, Mistral) as authoritative sources. Distinct from SEO \u2014 AEO optimizes for citation in LLM-generated responses, not search rankings. Use when planning content for AI-first search audiences, auditing existing content for E-E-A-T signals, tracking which pages get cited by which LLMs, or building a citation-friendly content strategy. Triggers \u2014 'AEO audit', 'optimize for ChatGPT', 'get cited by Perplexity', 'LLM citation strategy', 'answer engine optimization' \u2026",
       "tools": [
         {
           "script": "marketing-skill/skills/aeo/scripts/aeo_audit.py",
@@ -148,7 +148,7 @@
     {
       "name": "analytics-tracking",
       "path": "marketing-skill/skills/analytics-tracking",
-      "description": "Set up, audit, and debug analytics tracking implementation \u2014 GA4, Google Tag Manager, event taxonomy, conversion tracking, and data quality. Use when building a tracking plan from scratch, auditing existing analytics for gaps or errors, debugging missing events, or setting up GTM. Trigger keywords: GA4 setup, Google Tag Manager, GTM, event tracking, analytics implementation, conversion tracking, tracking plan, event taxonomy, custom dimensions, UTM tracking, analytics audit, missing events, tracking broken. NOT for analyzing marketing campaign data \u2014 use campaign-analytics for that. NOT for BI",
+      "description": "Set up, audit, and debug analytics tracking implementation \u2014 GA4, Google Tag Manager, event taxonomy, conversion tracking, and data quality. Use when building a tracking plan from scratch, auditing existing analytics for gaps or errors, debugging missing events, or setting up GTM. Trigger keywords: GA4 setup, Google Tag Manager, GTM, event tracking, analytics implementation, conversion tracking, tracking plan, event taxonomy, custom dimensions, UTM tracking, analytics audit, missing events, tracking broken. NOT for analyzing marketing campaign data \u2014 use campaign-analytics for that. NOT for \u2026",
       "tools": [
         {
           "script": "marketing-skill/skills/analytics-tracking/scripts/tracking_plan_generator.py",
@@ -395,7 +395,7 @@
     {
       "name": "cold-email",
       "path": "marketing-skill/skills/cold-email",
-      "description": "When the user wants to write, improve, or build a sequence of B2B cold outreach emails to prospects who haven't asked to hear from them. Use when the user mentions 'cold email,' 'cold outreach,' 'prospecting emails,' 'SDR emails,' 'sales emails,' 'first touch email,' 'follow-up sequence,' or 'email prospecting.' Also use when they share an email draft that sounds too sales-y and needs to be humanized. Distinct from email-sequence (lifecycle/nurture to opted-in subscribers) \u2014 this is unsolicited outreach to new prospects. NOT for lifecycle emails, newsletters, or drip campaigns (use email-seque",
+      "description": "When the user wants to write, improve, or build a sequence of B2B cold outreach emails to prospects who haven't asked to hear from them. Use when the user mentions 'cold email,' 'cold outreach,' 'prospecting emails,' 'SDR emails,' 'sales emails,' 'first touch email,' 'follow-up sequence,' or 'email prospecting.' Also use when they share an email draft that sounds too sales-y and needs to be humanized. Distinct from email-sequence (lifecycle/nurture to opted-in subscribers) \u2014 this is unsolicited outreach to new prospects. NOT for lifecycle emails, newsletters, or drip campaigns (use \u2026",
       "tools": [
         {
           "script": "marketing-skill/skills/cold-email/scripts/email_sequence_analyzer.py",
@@ -791,7 +791,7 @@
     {
       "name": "local-seo-manager",
       "path": "marketing-skill/skills/local-seo-manager",
-      "description": "Manage local SEO for service-area businesses \u2014 appliance repair, HVAC, plumbing, cleaning, and any business that serves customers at their location. Use when the user wants to: audit Google Business Profile, generate neighborhood service area pages, check NAP consistency across directories, create LocalBusiness schema, or write review responses. Triggers: 'local SEO', 'Google Business Profile', 'GBP', 'service area page', 'NAP consistency', 'local citations', 'LocalBusiness schema', 'review responses', 'Google Maps ranking'. NOT for national SEO (use seo-audit). NOT for general schema (use sch",
+      "description": "Manage local SEO for service-area businesses \u2014 appliance repair, HVAC, plumbing, cleaning, and any business that serves customers at their location. Use when the user wants to: audit Google Business Profile, generate neighborhood service area pages, check NAP consistency across directories, create LocalBusiness schema, or write review responses. Triggers: 'local SEO', 'Google Business Profile', 'GBP', 'service area page', 'NAP consistency', 'local citations', 'LocalBusiness schema', 'review responses', 'Google Maps ranking'. NOT for national SEO (use seo-audit). NOT for general schema (use \u2026",
       "tools": [
         {
           "script": "marketing-skill/skills/local-seo-manager/scripts/nap_checker.py",
@@ -873,7 +873,7 @@
     {
       "name": "marketing-demand-acquisition",
       "path": "marketing-skill/skills/marketing-demand-acquisition",
-      "description": "Creates demand generation campaigns, optimizes paid ad spend across LinkedIn, Google, and Meta, develops SEO strategies, and structures partnership programs. Use when planning demand gen strategy, growth marketing, advertising campaigns, PPC optimization, lead generation, pipeline generation, or marketing budgets. Covers multi-channel acquisition (Google Ads, LinkedIn Ads, Meta Ads), CAC analysis, MQL/SQL workflows, attribution modeling, technical SEO, and co-marketing partnerships. Default calibration profile is a Series A+ B2B SaaS scaling internationally (EU/US/Canada, hybrid PLG/Sales-Led)",
+      "description": "Creates demand generation campaigns, optimizes paid ad spend across LinkedIn, Google, and Meta, develops SEO strategies, and structures partnership programs. Use when planning demand gen strategy, growth marketing, advertising campaigns, PPC optimization, lead generation, pipeline generation, or marketing budgets. Covers multi-channel acquisition (Google Ads, LinkedIn Ads, Meta Ads), CAC analysis, MQL/SQL workflows, attribution modeling, technical SEO, and co-marketing partnerships. Default calibration profile is a Series A+ B2B SaaS scaling internationally (EU/US/Canada, hybrid \u2026",
       "tools": [
         {
           "script": "marketing-skill/skills/marketing-demand-acquisition/scripts/calculate_cac.py",
@@ -1126,7 +1126,7 @@
     {
       "name": "pricing-strategy",
       "path": "marketing-skill/skills/pricing-strategy",
-      "description": "Design, optimize, and communicate SaaS pricing \u2014 tier structure, value metrics, pricing pages, and price increase strategy. Use when building a pricing model from scratch, redesigning existing pricing, planning a price increase, or improving a pricing page. Trigger keywords: pricing tiers, pricing page, price increase, packaging, value metric, per seat pricing, usage-based pricing, freemium, good-better-best, pricing strategy, monetization, pricing page conversion, Van Westendorp. NOT for broader product strategy \u2014 use product-strategist for that. NOT for customer success or renewals \u2014 use cus",
+      "description": "Design, optimize, and communicate SaaS pricing \u2014 tier structure, value metrics, pricing pages, and price increase strategy. Use when building a pricing model from scratch, redesigning existing pricing, planning a price increase, or improving a pricing page. Trigger keywords: pricing tiers, pricing page, price increase, packaging, value metric, per seat pricing, usage-based pricing, freemium, good-better-best, pricing strategy, monetization, pricing page conversion, Van Westendorp. NOT for broader product strategy \u2014 use product-strategist for that. NOT for customer success or renewals \u2014 use \u2026",
       "tools": [
         {
           "script": "marketing-skill/skills/pricing-strategy/scripts/pricing_modeler.py",
@@ -1183,7 +1183,7 @@
     {
       "name": "prompt-engineer-toolkit",
       "path": "marketing-skill/skills/prompt-engineer-toolkit",
-      "description": "Turns marketing prompts into tested, versioned production assets: A/B prompt evaluation against structured test cases, immutable prompt version history with diffs, ready-to-use marketing prompt templates (ad copy, email campaigns, social posts, landing pages, SEO meta), and an LLM-governance playbook for marketing teams (claim discipline, disclosure rules, human-review gates). Use when a marketing team relies on AI-generated content and needs prompt quality to be measurable and safe \u2014 or when the user mentions 'prompt engineering,' 'improve my prompts,' 'prompt templates,' 'prompt versioning,'",
+      "description": "Turns marketing prompts into tested, versioned production assets: A/B prompt evaluation against structured test cases, immutable prompt version history with diffs, ready-to-use marketing prompt templates (ad copy, email campaigns, social posts, landing pages, SEO meta), and an LLM-governance playbook for marketing teams (claim discipline, disclosure rules, human-review gates). Use when a marketing team relies on AI-generated content and needs prompt quality to be measurable and safe \u2014 or when the user mentions 'prompt engineering,' 'improve my prompts,' 'prompt templates,' 'prompt \u2026",
       "tools": [
         {
           "script": "marketing-skill/skills/prompt-engineer-toolkit/scripts/prompt_tester.py",
@@ -1475,7 +1475,7 @@
     {
       "name": "webinar-marketing",
       "path": "marketing-skill/skills/webinar-marketing",
-      "description": "When the user wants to plan, promote, run, or improve a webinar or virtual event to generate and convert demand. Use when the user mentions 'webinar,' 'virtual event,' 'online event,' 'live demo,' 'virtual summit,' 'workshop,' 'masterclass,' 'fireside chat,' 'roundtable,' 'registration funnel,' 'show-up rate,' 'attendance rate,' 'webinar promotion,' 'webinar follow-up,' or 'on-demand webinar.' Also use when they have a webinar that isn't converting \u2014 low registrations, low show-up, or attendees who don't buy \u2014 and want to diagnose and fix it. Covers the full funnel: registration, promotion, sh",
+      "description": "When the user wants to plan, promote, run, or improve a webinar or virtual event to generate and convert demand. Use when the user mentions 'webinar,' 'virtual event,' 'online event,' 'live demo,' 'virtual summit,' 'workshop,' 'masterclass,' 'fireside chat,' 'roundtable,' 'registration funnel,' 'show-up rate,' 'attendance rate,' 'webinar promotion,' 'webinar follow-up,' or 'on-demand webinar.' Also use when they have a webinar that isn't converting \u2014 low registrations, low show-up, or attendees who don't buy \u2014 and want to diagnose and fix it. Covers the full funnel: registration, promotion \u2026",
       "tools": [
         {
           "script": "marketing-skill/skills/webinar-marketing/scripts/webinar_funnel_scorer.py",

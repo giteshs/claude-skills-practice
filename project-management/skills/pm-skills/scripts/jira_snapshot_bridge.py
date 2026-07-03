@@ -81,7 +81,9 @@ def normalize(raw, points_field):
         raise ValueError("expected {'issues': [...]} or a JSON list of issues")
     issues = []
     for rec in records:
-        f = rec.get("fields", rec) if isinstance(rec, dict) else {}
+        if not isinstance(rec, dict):
+            continue
+        f = rec.get("fields", rec)
         points = None
         for cand in ([points_field] if points_field else []) + POINT_FIELD_CANDIDATES:
             if cand and f.get(cand) is not None:
@@ -118,10 +120,17 @@ def flow_report(issues, as_of, sle_days, forecast_items, seed):
     p50, p85, p95 = (percentile(cycles, p) for p in (50, 85, 95))
     span_days = max((as_of - min(i["created"] for i in issues)).days, 7) if issues else 7
     weeks = max(span_days / 7.0, 1.0)
-    weekly = {}
-    for i in done:
-        wk = i["resolved"].isocalendar()[:2]
-        weekly[wk] = weekly.get(wk, 0) + 1
+    # Weekly throughput over the FULL observed span (first resolution → as_of),
+    # zero-filled: dead weeks are real observations and must be sampleable, or the
+    # Monte Carlo forecast biases optimistic (Vacanti).
+    weekly_counts = []
+    if done:
+        first_resolved = min(i["resolved"] for i in done)
+        observed_weeks = max(((as_of - first_resolved).days // 7) + 1, 1)
+        weekly_counts = [0] * observed_weeks
+        for i in done:
+            idx = min((i["resolved"] - first_resolved).days // 7, observed_weeks - 1)
+            weekly_counts[idx] += 1
     sle = sle_days if sle_days else p85
     conformance = (
         round(100 * sum(1 for c in cycles if c <= sle) / len(cycles), 1)
@@ -150,13 +159,14 @@ def flow_report(issues, as_of, sle_days, forecast_items, seed):
         report["warnings"].append(
             f"only {len(done)} completed items — flow percentiles are low-confidence below 10")
     if forecast_items:
-        if len(weekly) < 4 or len(done) < 10:
+        if len(weekly_counts) < 4 or len(done) < 10:
             report["warnings"].append(
-                "forecast refused: need >= 10 completed items across >= 4 distinct weeks "
-                "(Vacanti: throughput sampling needs real history)")
+                "forecast refused: need >= 10 completed items across >= 4 observed calendar "
+                "weeks (Vacanti: throughput sampling needs real history; zero-throughput "
+                "weeks count as observations)")
         else:
             rng = random.Random(seed)
-            samples = list(weekly.values())
+            samples = weekly_counts
             trials = []
             for _ in range(10000):
                 remaining, wk = forecast_items, 0
