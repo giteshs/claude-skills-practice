@@ -12,8 +12,8 @@ Exits with code 0 if there are no ERRORS (warnings do not fail). Deterministic, 
 
 Usage:
     python okf_linter.py                       # lint an embedded example bundle (PASS)
-    python okf_linter.py ./minha-empresa
-    python okf_linter.py ./minha-empresa --output json
+    python okf_linter.py ./my-company
+    python okf_linter.py ./my-company --output json
     python okf_linter.py --sample              # same as the first
 """
 

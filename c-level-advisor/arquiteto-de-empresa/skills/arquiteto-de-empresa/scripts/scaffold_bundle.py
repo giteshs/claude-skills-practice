@@ -11,7 +11,7 @@ Deterministic. No LLM calls. Standard library only.
 
 Usage:
     python scaffold_bundle.py                      # preview (dry-run) of "Example Company"
-    python scaffold_bundle.py "My Company" --out ./minha-empresa
+    python scaffold_bundle.py "My Company" --out ./my-company
     python scaffold_bundle.py "Acme" --out ./acme --has-product --has-tech
     python scaffold_bundle.py "Acme" --out ./acme --dry-run --output json
     python scaffold_bundle.py --sample             # same as the first (preview, does not write)
@@ -55,7 +55,7 @@ def slugify(name):
     ascii_only = "".join(c for c in nfkd if not unicodedata.combining(c))
     ascii_only = ascii_only.lower()
     ascii_only = re.sub(r"[^a-z0-9]+", "-", ascii_only).strip("-")
-    return ascii_only or "empresa"
+    return ascii_only or "company"
 
 
 def planned_folders(has_product, has_tech):
