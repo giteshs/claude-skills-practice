@@ -514,6 +514,14 @@ This repository publishes skills to **ClawHub** (clawhub.com) as the distributio
 
 **Quality Standard:** Each skill should save users 40%+ time while improving consistency/quality by 30%+.
 
+## Self-learning
+
+When I correct you, or you catch yourself making a mistake: before continuing add the lesson as a one-line rule under ## Lessons, so it never happens again
+
+## Lessons
+
+- (Claude adds rules here)
+
 ## Additional Resources
 
 - **.gitignore:** Excludes .vscode/, .DS_Store, AGENTS.md, PROMPTS.md, .env*
