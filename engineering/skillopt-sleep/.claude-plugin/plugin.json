@@ -1,0 +1,22 @@
+{
+  "name": "skillopt-sleep",
+  "description": "Nightly offline self-evolution for this repo's Claude agent: harvests past Claude Code sessions (read-only), mines recurring tasks, replays them offline on your own API budget, and consolidates what it learns into validated CLAUDE.md memory and SKILL.md skills behind a held-out validation gate. Nothing live changes until you run /skillopt-sleep adopt (backup written first). Default backend is mock (deterministic, no API spend); switch to --backend claude or --backend codex for genuine lift. Verbatim vendor of microsoft/SkillOpt's plugins/claude-code + skillopt_sleep engine (stdlib-only, no third-party dependencies). Use when the user wants their agent to learn from how this repo's skills are actually used, asks about a nightly/offline sleep or dream cycle, memory/skill consolidation, or invokes /skillopt-sleep.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Alireza Rezvani",
+    "url": "https://alirezarezvani.com"
+  },
+  "homepage": "https://github.com/alirezarezvani/claude-skills/tree/main/engineering/skillopt-sleep",
+  "repository": "https://github.com/alirezarezvani/claude-skills",
+  "license": "MIT",
+  "skills": [
+    "./skills/skillopt-sleep"
+  ],
+  "attribution": {
+    "upstream": "https://github.com/microsoft/SkillOpt",
+    "upstream_path": "skillopt_sleep/ (engine) + plugins/claude-code/ (Claude Code plugin surface) + plugins/run-sleep.sh (shared launcher)",
+    "upstream_author": "Yifan Yang (yifanyang@microsoft.com), Microsoft Corporation",
+    "upstream_license": "MIT",
+    "derivation_note": "Verbatim byte-for-byte copy of the skillopt_sleep Python engine, its Claude Code plugin skill/hooks/commands, and the shared scripts/run-sleep.sh + scripts/sleep.sh launchers. No logic modified. skillopt_sleep has zero third-party dependencies (stdlib only) — the heavier skillopt package it derives its ideas from (numpy/openai/azure, benchmark training loops) was deliberately NOT vendored, since this repo's skills are broad domain-expertise packages without labeled benchmarks, not narrow scoreable tasks. Re-vendor by re-copying skillopt_sleep/, plugins/claude-code/{skills,hooks,commands,scripts}/, and plugins/run-sleep.sh from a fresh clone of microsoft/SkillOpt."
+  }
+}
