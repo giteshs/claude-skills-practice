@@ -205,6 +205,37 @@ they are not upstream yet.
     the upstream two-levels-up check (kept for portability if this script is
     ever reused in that shape again). Verified both fixed branches resolve
     correctly in isolation from the co-located fallback.
+19. **Safety — the CLI's own stdout/`--json`/`--output` bypassed
+    `redact_secrets()` entirely.** Rounds 1-3 covered every *file*
+    `write_staging()`/`state.py` write, but `__main__.py`'s `cmd_run()` reads
+    the same in-memory `Report` object and prints `EditRecord.content`
+    (raw, from `reflect()`'s output over real task responses) directly to
+    the console, and `_report_payload()` serializes it unredacted for
+    `--json` — `write_staging()`'s redaction runs on a *copy*
+    (`redact_secrets(report.to_dict())`) used only for the on-disk JSON, it
+    never touches `report.edits` itself. Concretely: `scheduler.py`'s cron
+    entry redirects `run`'s stdout/stderr straight into
+    `<project>/.skillopt-sleep/cron.log` — a secret that leaked into a
+    proposed edit's content would land there in plaintext on every scheduled
+    night, in a file that (unlike `state.json`/staged files) also had no
+    `chmod` protection (see the second fix below). `cmd_harvest()`'s debug
+    output (`--json`, `--output <file>`, and the plain-text loop) has the
+    same shape: it prints raw mined `TaskRecord.intent` text so a human can
+    review it before setting `"reviewed": true` on a `--tasks-file`, which
+    means redacting it doesn't reduce what's reviewable (only secret-shaped
+    substrings are stripped) while closing the same leak path. Fixed:
+    `_report_payload()` and `cmd_run()`'s plain-text edit printing, and
+    `cmd_harvest()`'s payload (covering its `--output` file, `--json`
+    stdout, and plain-text loop uniformly), all now run through
+    `redact_secrets()`, gated on the same `redact_secrets` config flag as
+    everywhere else. Also hardened `scheduler.py`'s generated cron line to
+    `chmod 700` the `.skillopt-sleep` log dir and `chmod 600` `cron.log`
+    itself (best-effort, `2>/dev/null`) before each run appends to it —
+    that file was never covered by the state/staging chmod pass in fix #16.
+    Verified: a synthetic secret seeded into a task's intent no longer
+    appears in `cmd_run`'s `--json` payload or plain-text edit output, or in
+    `cmd_harvest`'s redacted payload; executing the actual generated cron
+    line end-to-end produces a `0700` log dir and `0600` log file on disk.
 
 ## What this plugin is
 
@@ -280,8 +311,12 @@ repo's own recurring tasks and get genuine lift on `CLAUDE.md` / a target
   hand-edited staged proposal (deviation #7). Disabling this via
   `redact_secrets: false` is honored but never silent — it logs a report
   note (deviation #6). The same flag now also covers the cross-night task
-  archive (`state.json`, deviation #9) and `report.md`/`report.json`
-  (deviation #10) — the two files a human is actually told to read first.
+  archive (`state.json`, deviation #9), `report.md`/`report.json`
+  (deviation #10) — the two files a human is actually told to read first —
+  and every CLI console/`--json`/`--output` code path (`cmd_run`,
+  `cmd_harvest`), not just what gets written to disk (deviation #19).
+  `cron.log` (the CLI's redirected stdout/stderr) is now `chmod 600` too,
+  matching state/staging (deviation #19).
 - The generated crontab line, including the `extra` flags parameter, is
   fully `shlex.quote()`-d, not just the path arguments (deviations #3, #8).
 - `replay_mode: "fresh"` (worktree replay) is not implemented — every replay

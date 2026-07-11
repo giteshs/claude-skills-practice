@@ -34,6 +34,7 @@ from skillopt_sleep.harvest_sources import harvest_for_config
 from skillopt_sleep.mine import mine
 from skillopt_sleep.staging import adopt as adopt_staging
 from skillopt_sleep.staging import latest_staging
+from skillopt_sleep.staging import redact_secrets
 from skillopt_sleep.state import SleepState
 from skillopt_sleep.tasks_file import load_tasks_file, make_tasks_payload, write_tasks_file
 
@@ -46,7 +47,14 @@ def _read_text(path: str) -> str:
         return ""
 
 
-def _report_payload(rep, outcome) -> Dict[str, Any]:
+def _report_payload(rep, outcome, *, redact: bool = True) -> Dict[str, Any]:
+    # edits/rejected_edits carry EditRecord.content/.rationale sourced from
+    # reflect()'s output over real harvested task responses -- the same risk
+    # staging.py's write_staging() already redacts for the on-disk
+    # proposed_*.md/report.md/report.json. Redact here too: this is CLI
+    # stdout, and scheduler.py's cron entry redirects that stdout straight
+    # into <project>/.skillopt-sleep/cron.log.
+    _r = redact_secrets if redact else (lambda v: v)
     return {
         "night": rep.night,
         "accepted": rep.accepted,
@@ -58,8 +66,8 @@ def _report_payload(rep, outcome) -> Dict[str, Any]:
         "n_sessions": rep.n_sessions,
         "n_accepted_edits": len(rep.edits),
         "n_rejected_edits": len(rep.rejected_edits),
-        "edits": [e.__dict__ for e in rep.edits],
-        "rejected_edits": [e.__dict__ for e in rep.rejected_edits],
+        "edits": [_r(e.__dict__) for e in rep.edits],
+        "rejected_edits": [_r(e.__dict__) for e in rep.rejected_edits],
         "notes": rep.notes,
         "staging_dir": outcome.staging_dir,
         "adopted": outcome.adopted,
@@ -158,8 +166,13 @@ def cmd_run(args, dry: bool = False) -> int:
             return 2
     outcome = run_sleep_cycle(cfg, seed_tasks=tasks, dry_run=dry)
     rep = outcome.report
+    # Same redact_secrets flag cycle.py/staging.py honor for staged files;
+    # this is the CLI's own stdout, which scheduler.py's cron entry
+    # redirects straight into <project>/.skillopt-sleep/cron.log.
+    redact_enabled = bool(cfg.get("redact_secrets", True))
+    _r = redact_secrets if redact_enabled else (lambda v: v)
     if args.json:
-        payload = _report_payload(rep, outcome)
+        payload = _report_payload(rep, outcome, redact=redact_enabled)
         if task_meta:
             payload["tasks_file"] = task_meta.get("tasks_file", "")
             payload["tasks_reviewed"] = task_meta.get("reviewed", False)
@@ -169,11 +182,11 @@ def cmd_run(args, dry: bool = False) -> int:
         print(f"[sleep] held-out {rep.baseline_score:.3f} -> {rep.candidate_score:.3f} "
               f"=> {rep.gate_action} (accepted={rep.accepted})")
         for e in rep.edits:
-            print(f"   + [{e.target}/{e.op}] {e.content}")
+            print(f"   + [{e.target}/{e.op}] {_r(e.content)}")
         if rep.rejected_edits:
             print("[sleep] rejected by gate:")
             for e in rep.rejected_edits:
-                print(f"   - [{e.target}/{e.op}] {e.content}")
+                print(f"   - [{e.target}/{e.op}] {_r(e.content)}")
         if outcome.staging_dir:
             print(f"[sleep] staged: {outcome.staging_dir}")
             if not outcome.adopted:
@@ -254,6 +267,16 @@ def cmd_harvest(args) -> int:
         n_sessions=len(digests),
         target_skill_path=target_skill_path,
     )
+    # payload carries raw harvested intent/context text (this command's whole
+    # purpose is letting a human review it before flipping "reviewed": true
+    # on a --tasks-file). Redaction only strips secret-shaped substrings, so
+    # it doesn't hurt that review; same redact_secrets flag as everywhere
+    # else, applied uniformly before this reaches the --output file, --json
+    # stdout, or the plain-text loop below.
+    redact_enabled = bool(cfg.get("redact_secrets", True))
+    if redact_enabled:
+        payload = redact_secrets(payload)
+    _r = redact_secrets if redact_enabled else (lambda v: v)
     output_path = ""
     if getattr(args, "output", ""):
         output_path = write_tasks_file(args.output, payload)
@@ -267,7 +290,7 @@ def cmd_harvest(args) -> int:
         if output_path:
             print(f"[sleep] wrote reviewed-task draft: {output_path}")
         for t in tasks:
-            print(f"  [{t.split}/{t.outcome}] {t.intent[:90]}")
+            print(f"  [{t.split}/{t.outcome}] {_r(t.intent[:90])}")
     return 0
 
 

@@ -84,7 +84,14 @@ def _runner_cmd(project: str, backend: str, extra: str, python: str) -> str:
     # use absolute python + -m so cron's minimal env still works
     cmd = (f'{shlex.quote(python)} -m skillopt_sleep run --project {project_q} '
            f'--scope invoked --backend {shlex.quote(backend)} {extra_q}'.rstrip())
-    return f'mkdir -p {logdir_q}; cd {repo_root_q} && {cmd} >> {log_q} 2>&1'
+    # cron.log accumulates this command's real stdout/stderr indefinitely,
+    # which (unlike state.json/staged files) was never covered by this
+    # plugin's chmod 0700/0600 hardening -- tighten it here too, best-effort
+    # (2>/dev/null so a chmod failure, e.g. a non-POSIX filesystem, doesn't
+    # block the actual run).
+    return (f'mkdir -p {logdir_q} && chmod 700 {logdir_q} 2>/dev/null; '
+            f'touch {log_q} && chmod 600 {log_q} 2>/dev/null; '
+            f'cd {repo_root_q} && {cmd} >> {log_q} 2>&1')
 
 
 def _repo_root() -> str:
