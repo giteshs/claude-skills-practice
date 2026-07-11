@@ -82,6 +82,65 @@ they are not upstream yet.
    `shlex.split()` into tokens and each token `shlex.quote()`-d before
    joining, so a multi-token or attacker-influenced `extra` can't break out
    of the command the way `project` used to.
+9. **Safety — the cross-night task archive (`state.json`) was never
+   redacted.** `state.py`'s `add_to_archive()` persists raw `TaskRecord`
+   content (`intent` / `context_excerpt` / `attempted_solution` — real
+   harvested prompt/response text) to `~/.skillopt-sleep/state.json`
+   indefinitely, for `recall_k` associative recall across nights. Unlike
+   `proposed_SKILL.md`/`proposed_CLAUDE.md`/`diagnostics.json` (fixes #2,
+   #6), this file lives entirely outside the staging dir a user is ever told
+   to review — a secret pasted into a real debugging session would have
+   landed there and stayed. Fixed: `cycle.py` now redacts each task dict
+   before archiving, using the same `redact_enabled` flag (and loud
+   report-note-on-disable) as everything else.
+10. **Safety — `report.md` / `report.json` were never redacted.** These are
+    the two artifacts a human is told to read *first* (the SKILL.md's own
+    workflow says "Read the generated `report.md`... show the user the exact
+    proposed edits"), yet `EditRecord.content`/`.rationale` — sourced from
+    the optimizer's `reflect()` output over real failing task responses —
+    were written unredacted, while the sibling `proposed_SKILL.md`/
+    `proposed_CLAUDE.md`/`diagnostics.json` got fixed in earlier rounds.
+    Fixed: `write_staging()` now redacts the rendered `report_md` string and
+    `report.to_dict()` (via `redact_secrets`'s existing recursive dict/list/
+    str handling) before writing `report.md`/`report.json`.
+11. **Safety/cosmetic — dead config knob: `replay_mode`.** `config.py`
+    declared `"replay_mode": "mock" | "fresh" (worktree)`, but the only
+    production code path that reads it prints a cosmetic label in the
+    report — there is no worktree-replay implementation anywhere in this
+    engine. Implementing real worktree isolation was judged too invasive for
+    a vendored copy (a substantial new feature in code this repo doesn't
+    otherwise maintain); instead, `cycle.py` now appends a loud report note
+    whenever `replay_mode` is set to anything but `"mock"`, so the report
+    never implies real worktree isolation that isn't happening.
+12. **Sensitive — hardcoded internal Azure OpenAI infrastructure removed.**
+    `backend.py` shipped an `AzureOpenAIBackend`/`AzureResponsesBackend` pair
+    with 5 internal-looking Azure endpoint hostnames and a hardcoded Managed
+    Identity client ID, explicitly commented as sourced from "the intern's
+    avail_api.md" — reads like leaked internal Microsoft dev-infra topology.
+    This backend was already unreachable from this plugin's documented
+    `mock`/`claude`/`codex`/`copilot` `--backend` choices (only settable by
+    hand-editing `~/.skillopt-sleep/config.json` directly) and requires
+    `azure-identity`/`openai` third-party packages this repo never claims to
+    depend on. Removed entirely (classes, constants, `get_backend()`/
+    `build_backend()` dispatch branches and the now-unused `azure_endpoint`
+    parameter); `get_backend("azure")` now safely falls back to `MockBackend`
+    instead of raising or wiring internal infra. Same class of "leftover
+    internal-looking detail" as fix #5's dead `nvm` path, but materially more
+    sensitive, so it was removed rather than just flagged.
+13. **Safety — unvalidated tool names reachable via `--tasks-file`.**
+    `attempt_with_tools()` (all three CLI backends) used a task's tool name
+    both as a shim *filename* (`os.path.join(work, tname)`) and interpolated
+    unescaped into the shim's generated shell body
+    (`f'echo "{tname}" >> ...'`). Tool names originate from a hand-authored
+    `--tasks-file`'s `judge.checks[].arg` (`op=="tool_called"`), never
+    validated as a safe identifier — a crafted name containing `../`, `"`,
+    backticks, or `$( )` could traverse out of the working dir or inject a
+    command into the generated shim. Not reachable via the harvest/mine path
+    today (the LLM miner excludes this check type), but `--tasks-file` is a
+    documented, user-facing input. Fixed: a shared `_sanitize_tool_names()`
+    helper filters to a safe-identifier allowlist (`^[A-Za-z0-9_-]{1,64}$`)
+    before any name is used as a filename or shell text, in all three
+    backends.
 
 ## What this plugin is
 
@@ -156,9 +215,20 @@ repo's own recurring tasks and get genuine lift on `CLAUDE.md` / a target
   re-redacted again at `adopt()` time as defense-in-depth against a
   hand-edited staged proposal (deviation #7). Disabling this via
   `redact_secrets: false` is honored but never silent — it logs a report
-  note (deviation #6).
+  note (deviation #6). The same flag now also covers the cross-night task
+  archive (`state.json`, deviation #9) and `report.md`/`report.json`
+  (deviation #10) — the two files a human is actually told to read first.
 - The generated crontab line, including the `extra` flags parameter, is
   fully `shlex.quote()`-d, not just the path arguments (deviations #3, #8).
+- `replay_mode: "fresh"` (worktree replay) is not implemented — every replay
+  runs as `"mock"` regardless, and the report says so explicitly rather than
+  implying isolation that isn't happening (deviation #11).
+- Tool names reachable via a hand-authored `--tasks-file` are validated
+  against a safe-identifier allowlist before being used as a shim filename or
+  interpolated into generated shell text (deviation #13).
+- Only `mock`/`claude`/`codex`/`copilot` backends are supported — a
+  Microsoft-internal Azure OpenAI backend was removed rather than carried
+  forward (deviation #12).
 
 ## What was and wasn't vendored
 
@@ -168,6 +238,7 @@ repo's own recurring tasks and get genuine lift on `CLAUDE.md` / a target
 | `plugins/claude-code/skills\|hooks\|commands\|scripts/` | `plugins/codex/`, `plugins/copilot/`, `plugins/devin/`, `plugins/openclaw/` (other-agent plugin variants) |
 | `plugins/run-sleep.sh` shared launcher | `skillopt_webui/` (optional Gradio dashboard) |
 | `LICENSE` | `docs/`, `ckpt/`, `data/`, `index.html` (training-package docs/site/checkpoints) |
+| | `AzureOpenAIBackend`/`AzureResponsesBackend` from `backend.py` — removed post-vendor, see deviation #12 (Microsoft-internal endpoints/client ID, unreachable from this plugin's supported `--backend` choices, needs deps not vendored here) |
 
 ## Updating
 

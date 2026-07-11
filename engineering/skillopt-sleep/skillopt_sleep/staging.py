@@ -118,9 +118,20 @@ def write_staging(
     # These are the files `adopt()` copies over the LIVE CLAUDE.md / SKILL.md
     # (with --auto-adopt, with no human in the loop) — scrub them the same as
     # every other on-disk artifact rather than only the diagnostics dump.
+    #
+    # report.md / report.json carry the same risk: EditRecord.content /
+    # .rationale come from the optimizer's reflect() output over real failing
+    # task responses, and report.md is the file the SKILL.md's own workflow
+    # tells a human to read FIRST ("show the user the exact proposed edits").
+    # Redact both — report_md as the already-rendered string, report.to_dict()
+    # recursively (redact_secrets walks dict/list/str) before it hits JSON.
     if redact:
         proposed_skill = redact_secrets(proposed_skill)
         proposed_memory = redact_secrets(proposed_memory)
+        report_md = redact_secrets(report_md)
+        report_dict = redact_secrets(report.to_dict())
+    else:
+        report_dict = report.to_dict()
 
     manifest = {
         "live_skill_path": live_skill_path,
@@ -136,7 +147,7 @@ def write_staging(
         with open(os.path.join(out, "proposed_CLAUDE.md"), "w", encoding="utf-8") as f:
             f.write(proposed_memory)
     with open(os.path.join(out, "report.json"), "w", encoding="utf-8") as f:
-        json.dump(report.to_dict(), f, ensure_ascii=False, indent=2)
+        json.dump(report_dict, f, ensure_ascii=False, indent=2)
     with open(os.path.join(out, "report.md"), "w", encoding="utf-8") as f:
         f.write(report_md)
     with open(os.path.join(out, "manifest.json"), "w", encoding="utf-8") as f:

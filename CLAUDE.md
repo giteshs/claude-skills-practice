@@ -159,6 +159,21 @@ See [standards/git/git-workflow-standards.md](standards/git/git-workflow-standar
 
 ## Current Version
 
+**Version:** v2.11.2 (skillopt-sleep — vendored nightly self-improvement plugin from microsoft/SkillOpt)
+
+**v2.11.2 highlights — engineering/skillopt-sleep/:**
+
+Vendors `engineering/skillopt-sleep/` — a byte-for-byte start from [microsoft/SkillOpt](https://github.com/microsoft/SkillOpt)'s `skillopt_sleep` engine (32 files, stdlib-only, zero third-party deps) and its Claude Code plugin surface (`skills/`, `hooks/`, `commands/`, `scripts/`), following the same verbatim-vendor pattern as `loop-library/`. Gives a local agent a nightly gated self-improvement cycle: read-only harvest of past Claude Code session transcripts → mine recurring tasks → replay offline on the user's own API budget → consolidate into `CLAUDE.md`/`SKILL.md` edits behind a held-out validation gate → stage for review; nothing live changes until an explicit `/skillopt-sleep adopt` (which backs up first). Default `mock` backend spends no API budget.
+
+- **Deliberately not vendored:** the heavier `skillopt` *training* package (benchmark-driven, needs `numpy`/`openai`/`azure-*` + hand-labeled train/val/test data per task) — it optimizes one narrow, scoreable task at a time, which doesn't fit this repo's broad domain-expertise skills or its no-ML-in-scripts/no-test-framework conventions; `skillopt_sleep` mines its "benchmark" from real usage instead, which does fit.
+- **8 deviations from upstream**, all cross-documented in `plugin.json`'s `attribution.derivation_note` and `README.md`'s "Deviations from upstream" section (re-apply on re-vendor) — found across three rounds of adversarial code review rather than assumed safe from the surface docs:
+  - 2 cosmetic (a `check_paths.py` wording fix; a dead cross-reference to a non-vendored design doc)
+  - 6 safety/hardening: `redact_secrets()` now actually covers `proposed_SKILL.md`/`proposed_CLAUDE.md` AND the cross-night task archive (`state.json`) AND `report.md`/`report.json` (previously only `diagnostics.json` was scrubbed, despite `report.md` being the file the SKILL.md's own workflow tells a human to read *first*); the generated crontab line is fully `shlex.quote()`-d (including the `extra` flags param); `adopt()` re-redacts as defense-in-depth against a hand-edited staged proposal; the previously-dead `max_tokens_per_night` config key now sizes `dream_rollouts` down via the engine's own (previously unwired) `plan_depth()` heuristic, with a loud report note on every cap and on exhaustion; the previously-dead `replay_mode: "fresh"` key now warns it's an unimplemented no-op rather than silently implying real worktree isolation; a hardcoded internal Azure OpenAI backend (5 internal-looking endpoint hostnames + a Managed Identity client ID, unreachable from this plugin's documented `mock`/`claude`/`codex`/`copilot` backend surface and requiring third-party deps we don't vendor) was removed rather than carried forward; tool-shim names used as both a shell-script filename and unescaped shell body text are now validated against a safe-identifier allowlist before use.
+- One documented, opt-in exception to CLAUDE.md's "no LLM calls in scripts" anti-pattern (see that section) — `backend.py`'s `claude`/`codex` backends shell out to those CLIs only when a non-`mock` backend is explicitly selected.
+- Registered as its own installable marketplace plugin; **counters:** skills 355 → 358; tools 602 → 634; commands 109 → 110; plugins 83 → 84 (derived via `scripts/derive_counters.py --check`).
+
+---
+
 **Version:** v2.11.1 (pm/product agent-harness domains — deep audit + orchestrated loops for product-team & project-management)
 
 **v2.11.1 highlights — both PM/product routers become agent harnesses:**

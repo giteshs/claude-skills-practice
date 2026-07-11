@@ -121,6 +121,8 @@ python -m skillopt_sleep.experiments.run_experiment --persona researcher --asser
 python -m skillopt_sleep.experiments.run_experiment --persona programmer  --assert-improves
 ```
 
-See the SkillOpt-Sleep guide section for recorded output and
-`docs/superpowers/specs/2026-06-07-skillopt-sleep-claude-code-plugin-design.md`
-for the full design.
+See the upstream SkillOpt-Sleep guide section
+(https://microsoft.github.io/SkillOpt/docs/guideline.html#sleep) for recorded
+output and the full design. (The original repo-relative design-doc path,
+`docs/superpowers/specs/...`, is not vendored into this repo — see this
+skill's README.md "What was and wasn't vendored" table.)

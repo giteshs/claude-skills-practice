@@ -35,6 +35,25 @@ def skill_hash(content: str) -> str:
     return hashlib.sha256(content.encode("utf-8")).hexdigest()[:16]
 
 
+# Tool names become both a shim FILENAME (os.path.join(work, tname)) and are
+# interpolated unescaped into the generated shim's shell body
+# (f'echo "{tname}" >> ...'), in all three attempt_with_tools() below. A
+# hand-authored --tasks-file's judge.checks[].arg (op=="tool_called") reaches
+# this list without validation — a crafted name containing "../", `"`,
+# backticks, or `$( )` could traverse out of the working dir or inject a
+# command into the shim's own body. Not reachable via the harvest/mine path
+# today (the LLM miner excludes tool_called checks), but --tasks-file is a
+# documented, user-facing input, so validate defensively rather than trust it.
+_SAFE_TOOL_NAME_RE = re.compile(r"^[A-Za-z0-9_-]{1,64}$")
+
+
+def _sanitize_tool_names(tools: Optional[List[str]]) -> List[str]:
+    """Filter to identifier-safe tool names; drop (don't attempt to escape)
+    anything else, since names are used both as a filename and as unescaped
+    shell text."""
+    return [t for t in (tools or ["search"]) if _SAFE_TOOL_NAME_RE.match(t)]
+
+
 # ── Backend protocol ──────────────────────────────────────────────────────────
 
 class Backend:
@@ -640,8 +659,9 @@ class ClaudeCliBackend(CliBackend):
         import tempfile, shutil, stat
         work = tempfile.mkdtemp(prefix="skillopt_sleep_tools_")
         calllog = os.path.join(work, "_tool_calls.log")
+        tool_names = _sanitize_tool_names(tools)
         try:
-            for tname in (tools or ["search"]):
+            for tname in tool_names:
                 shim = os.path.join(work, tname)
                 with open(shim, "w") as f:
                     f.write(
@@ -652,7 +672,7 @@ class ClaudeCliBackend(CliBackend):
                 os.chmod(shim, os.stat(shim).st_mode | stat.S_IEXEC | stat.S_IXGRP | stat.S_IXOTH)
             tool_hint = (
                 "You have shell tools available in the current directory: "
-                + ", ".join(f"./{t}" for t in (tools or ["search"]))
+                + ", ".join(f"./{t}" for t in tool_names)
                 + ". When the skill says to look something up or search before "
                 "answering, you MUST actually run the tool (e.g. `./search \"query\"`) "
                 "via Bash before giving your final answer."
@@ -691,7 +711,7 @@ class ClaudeCliBackend(CliBackend):
             if os.path.exists(calllog):
                 with open(calllog) as f:
                     logged = {ln.strip() for ln in f if ln.strip()}
-                called = [t for t in (tools or ["search"]) if t in logged]
+                called = [t for t in tool_names if t in logged]
             return resp, called
         finally:
             try:
@@ -827,9 +847,9 @@ class CodexCliBackend(CliBackend):
 
         An empty reply scores 0 on every judge, which deflates the held-out
         baseline AND blocks the candidate from ever improving — making a flaky
-        backend indistinguishable from "nothing to learn". The Azure backend
-        already guards this way (AzureOpenAIBackend._call); codex now does too.
-        Auth errors are NOT retried (hopeless until the user re-logs-in).
+        backend indistinguishable from "nothing to learn". Codex now guards
+        this way too. Auth errors are NOT retried (hopeless until the user
+        re-logs-in).
         """
         import logging
         import random as _r
@@ -859,8 +879,9 @@ class CodexCliBackend(CliBackend):
         work = tempfile.mkdtemp(prefix="skillopt_sleep_codextools_")
         calllog = os.path.join(work, "_tool_calls.log")
         out_path = os.path.join(work, "_last.txt")
+        tool_names = _sanitize_tool_names(tools)
         try:
-            for tname in (tools or ["search"]):
+            for tname in tool_names:
                 shim = os.path.join(work, tname)
                 with open(shim, "w") as f:
                     f.write(
@@ -871,7 +892,7 @@ class CodexCliBackend(CliBackend):
                 os.chmod(shim, os.stat(shim).st_mode | stat.S_IEXEC | stat.S_IXGRP | stat.S_IXOTH)
             tool_hint = (
                 "Shell tools are available in the working directory: "
-                + ", ".join(f"./{t}" for t in (tools or ["search"]))
+                + ", ".join(f"./{t}" for t in tool_names)
                 + ". When the skill says to look something up or search before "
                 "answering, you MUST actually run the tool (e.g. `./search \"query\"`) "
                 "before giving your final answer."
@@ -917,7 +938,7 @@ class CodexCliBackend(CliBackend):
             if os.path.exists(calllog):
                 with open(calllog) as f:
                     logged = {ln.strip() for ln in f if ln.strip()}
-                called = [t for t in (tools or ["search"]) if t in logged]
+                called = [t for t in tool_names if t in logged]
             return resp, called
         finally:
             try:
@@ -1046,7 +1067,7 @@ class CopilotCliBackend(CliBackend):
         import stat
         work = tempfile.mkdtemp(prefix="skillopt_sleep_copilottools_")
         calllog = os.path.join(work, "_tool_calls.log")
-        tool_names = tools or ["search"]
+        tool_names = _sanitize_tool_names(tools)
         is_windows = os.name == "nt"
         try:
             for tname in tool_names:
@@ -1180,200 +1201,12 @@ class DualBackend(Backend):
         return self.target.tokens_used() + self.optimizer.tokens_used()
 
 
-# ── Azure OpenAI backend (gpt-5.x via managed identity) ───────────────────────
-
-# Endpoint -> deployments, from the intern's avail_api.md. The backend picks the
-# first endpoint that hosts the requested deployment.
-_AZURE_ENDPOINTS = {
-    "https://oaidr9.openai.azure.com/": {"gpt-5.5", "gpt-5.4", "gpt-5.4-mini", "gpt-5.4-nano", "o3"},
-    "https://t2vgoaigpt4o6.openai.azure.com/": {"gpt-5.5", "gpt-4o-mini", "o3", "o4-mini"},
-    "https://oaidr21.openai.azure.com/": {"gpt-5.5", "o3", "o4-mini"},
-    "https://searchagent5.cognitiveservices.azure.com/": {"gpt-5.4-mini", "gpt-4o-mini"},
-    "https://t2vgoaigpt4o.openai.azure.com/": {"gpt-5.4", "gpt-5.4-nano", "gpt-5.2", "gpt-5.1", "o3", "o4-mini"},
-}
-_AZURE_MI_CLIENT_ID = "8cafa2b1-a2a7-4ad9-814a-ffe4aed7e800"
-
-
-class AzureOpenAIBackend(CliBackend):
-    """Drives Azure OpenAI gpt-5.x deployments via managed identity.
-
-    Mirrors the intern's blog_1 setup (avail_api.md): managed-identity auth, the
-    same endpoints/deployments. Reuses CliBackend's attempt/judge/reflect prompts
-    and JSON parsing; only _call() differs. openai + azure-identity are lazy
-    imported so the mock/CLI paths stay dependency-free.
-    """
-
-    name = "azure"
-
-    def __init__(self, deployment: str = "", endpoint: str = "", timeout: int = 180,
-                 api_version: str = "2024-12-01-preview") -> None:
-        super().__init__(model=deployment or "gpt-5.5", timeout=timeout)
-        self.deployment = deployment or "gpt-5.5"
-        self.endpoint = endpoint or self._endpoint_for(self.deployment)
-        self.api_version = api_version
-        self.name = f"azure:{self.deployment}"
-        self._client = None
-
-    @staticmethod
-    def _endpoint_for(deployment: str) -> str:
-        for ep, deps in _AZURE_ENDPOINTS.items():
-            if deployment in deps:
-                return ep
-        return "https://oaidr9.openai.azure.com/"
-
-    def _get_client(self):
-        if self._client is None:
-            from azure.identity import ManagedIdentityCredential, get_bearer_token_provider
-            from openai import AzureOpenAI
-            cred = ManagedIdentityCredential(client_id=_AZURE_MI_CLIENT_ID)
-            tp = get_bearer_token_provider(cred, "https://cognitiveservices.azure.com/.default")
-            self._client = AzureOpenAI(
-                azure_endpoint=self.endpoint, azure_ad_token_provider=tp,
-                api_version=self.api_version, max_retries=4,
-            )
-        return self._client
-
-    def _call(self, prompt: str, *, max_tokens: int = 1024, retries: int = 5) -> str:
-        """Call the deployment with bounded retries.
-
-        IMPORTANT: transient failures (429 rate-limit, timeouts, 5xx) must NOT be
-        silently turned into an empty string — an empty response scores 0 and
-        deflates every baseline/after measure. We retry with exponential backoff
-        (mirroring the research repo's retries=5) and only return "" after the
-        budget is exhausted. ``time``/``random`` are used for backoff; both are
-        available here (this is library code, not a Workflow script sandbox).
-        """
-        import random as _r
-        import time as _t
-
-        client = self._get_client()
-        last_exc = None
-        for attempt in range(max(1, retries)):
-            try:
-                resp = client.chat.completions.create(
-                    model=self.deployment,
-                    messages=[{"role": "user", "content": prompt}],
-                    max_completion_tokens=16384,
-                )
-                text = (resp.choices[0].message.content or "").strip()
-                try:
-                    u = resp.usage
-                    self._tokens += (getattr(u, "prompt_tokens", 0) or 0) + (getattr(u, "completion_tokens", 0) or 0)
-                except Exception:
-                    pass
-                if text:
-                    return text
-                # empty but no exception: model genuinely returned nothing — one
-                # quick retry can help (reasoning models occasionally yield empty)
-                last_exc = "empty-response"
-            except Exception as e:  # noqa: BLE001
-                last_exc = e
-            # backoff before next try (skip after the final attempt)
-            if attempt < retries - 1:
-                _t.sleep(min(8.0, (2 ** attempt) * 0.5) + _r.random() * 0.4)
-        return ""
-
-
-class AzureResponsesBackend(AzureOpenAIBackend):
-    """gpt-5.x via the **Responses API** on the high-throughput gpt4v endpoints.
-
-    Differs from AzureOpenAIBackend in three ways, all required by the enhanced
-    experiment:
-      * Auth via ``AzureCliCredential`` (the logged-in user), not Managed Identity
-        — the gpt4v-scus/swc accounts grant the data role to the CLI principal.
-      * Calls ``client.responses.create`` (the /responses API) instead of
-        chat.completions — these deployments are Responses-only.
-      * Round-robins across multiple endpoints for parallel throughput; each
-        worker thread binds a client for one endpoint (picked by thread index)
-        so concurrent replay spreads load across all endpoints.
-
-    A single shared ``AzureCliCredential`` token provider is reused across all
-    endpoint clients (the token is cached + auto-refreshed by the provider).
-    """
-
-    name = "azure-responses"
-
-    # the two parallel /responses endpoints (user-provided), both hosting gpt-5.5
-    _RESP_ENDPOINTS = [
-        "https://gpt4v-scus.openai.azure.com/",
-        "https://gpt4v-swc.openai.azure.com/",
-    ]
-
-    def __init__(self, deployment: str = "", endpoints: Optional[List[str]] = None,
-                 timeout: int = 180, api_version: str = "2025-04-01-preview") -> None:
-        super().__init__(deployment=deployment, endpoint=(endpoints or self._RESP_ENDPOINTS)[0],
-                         timeout=timeout, api_version=api_version)
-        self.endpoints = list(endpoints or self._RESP_ENDPOINTS)
-        self.name = f"azure-responses:{self.deployment}"
-        self._token_provider = None
-        self._clients: dict = {}      # endpoint -> AzureOpenAI client
-        import threading as _thr
-        self._lock = _thr.Lock()
-        self._rr = 0                  # round-robin counter
-
-    def _get_provider(self):
-        if self._token_provider is None:
-            from azure.identity import AzureCliCredential, get_bearer_token_provider
-            self._token_provider = get_bearer_token_provider(
-                AzureCliCredential(), "https://cognitiveservices.azure.com/.default")
-        return self._token_provider
-
-    def _client_for(self, endpoint: str):
-        cl = self._clients.get(endpoint)
-        if cl is None:
-            from openai import AzureOpenAI
-            cl = AzureOpenAI(
-                azure_endpoint=endpoint, azure_ad_token_provider=self._get_provider(),
-                api_version=self.api_version, max_retries=2,
-            )
-            self._clients[endpoint] = cl
-        return cl
-
-    def _next_endpoint(self) -> str:
-        # round-robin so concurrent calls spread across all endpoints
-        with self._lock:
-            ep = self.endpoints[self._rr % len(self.endpoints)]
-            self._rr += 1
-        return ep
-
-    def _call(self, prompt: str, *, max_tokens: int = 1024, retries: int = 5) -> str:
-        import random as _r
-        import time as _t
-        last = None
-        base_ep = self._next_endpoint()           # this call's primary endpoint
-        base_idx = self.endpoints.index(base_ep)
-        for attempt in range(max(1, retries)):
-            # on retry, fail over to the other endpoint(s)
-            ep = self.endpoints[(base_idx + attempt) % len(self.endpoints)]
-            try:
-                client = self._client_for(ep)
-                resp = client.responses.create(
-                    model=self.deployment, input=prompt,
-                    max_output_tokens=16384,
-                )
-                text = (getattr(resp, "output_text", "") or "").strip()
-                try:
-                    u = resp.usage
-                    self._tokens += (getattr(u, "input_tokens", 0) or 0) + (getattr(u, "output_tokens", 0) or 0)
-                except Exception:
-                    pass
-                if text:
-                    return text
-                last = "empty-response"
-            except Exception as e:  # noqa: BLE001
-                last = e
-            if attempt < retries - 1:
-                _t.sleep(min(8.0, (2 ** attempt) * 0.5) + _r.random() * 0.4)
-        return ""
-
-
 def get_backend(
     name: str,
     *,
     model: str = "",
     claude_path: str = "claude",
     codex_path: str = "",
-    azure_endpoint: str = "",
     project_dir: str = "",
 ) -> Backend:
     n = (name or "mock").strip().lower()
@@ -1381,11 +1214,6 @@ def get_backend(
         return ClaudeCliBackend(model=model, claude_path=claude_path)
     if n in {"codex", "codex_cli", "openai_codex"}:
         return CodexCliBackend(model=model, codex_path=codex_path, project_dir=project_dir)
-    if n in {"azure", "azure_openai", "aoai"}:
-        return AzureOpenAIBackend(deployment=model, endpoint=azure_endpoint)
-    if n in {"azure-responses", "azure_responses", "aoai-responses", "responses"}:
-        eps = [e.strip() for e in azure_endpoint.split(",") if e.strip()] or None
-        return AzureResponsesBackend(deployment=model, endpoints=eps)
     if n in {"copilot", "github_copilot", "copilot_cli", "gh_copilot"}:
         return CopilotCliBackend(model=model)
     return MockBackend()
@@ -1400,7 +1228,6 @@ def build_backend(
     target_backend: str = "",
     target_model: str = "",
     codex_path: str = "",
-    azure_endpoint: str = "",
     preferences: str = "",
     project_dir: str = "",
 ) -> Backend:
@@ -1417,17 +1244,14 @@ def build_backend(
             backend,
             model=model,
             codex_path=codex_path,
-            azure_endpoint=azure_endpoint,
             project_dir=project_dir,
         )
         be.preferences = preferences
         return be
     tgt = get_backend(target_backend or backend, model=target_model or model,
-                      codex_path=codex_path, azure_endpoint=azure_endpoint,
-                      project_dir=project_dir)
+                      codex_path=codex_path, project_dir=project_dir)
     opt = get_backend(optimizer_backend or backend, model=optimizer_model or model,
-                      codex_path=codex_path, azure_endpoint=azure_endpoint,
-                      project_dir=project_dir)
+                      codex_path=codex_path, project_dir=project_dir)
     opt.preferences = preferences  # reflect runs on the optimizer
     dual = DualBackend(target=tgt, optimizer=opt)
     dual.preferences = preferences

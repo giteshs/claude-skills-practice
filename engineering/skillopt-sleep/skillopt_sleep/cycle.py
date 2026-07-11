@@ -128,6 +128,16 @@ def run_sleep_cycle(
     budget = Budget(max_tokens=cfg.get("max_tokens_per_night") or None)
     budget.start(time.time, backend.tokens_used())
 
+    # `redact_secrets` was declared in DEFAULTS but nothing ever read it —
+    # honor the user's choice (it's their config), but never silently (a loud
+    # report note is appended below once `report` exists). Computed once, up
+    # front, since it covers the cross-night task archive (state.json, via
+    # add_to_archive further down — a real gap: raw harvested intent/context
+    # text was persisting there indefinitely, outside the staging dir a user
+    # is ever told to review) as well as everything written to staging.
+    redact_enabled = bool(cfg.get("redact_secrets", True))
+    _maybe_redact = redact_secrets if redact_enabled else (lambda v: v)
+
     # ── live skill/memory docs ───────────────────────────────────────────
     live_memory_path = os.path.join(project, "CLAUDE.md")
     live_skill_path = cfg.managed_skill_path()
@@ -213,6 +223,23 @@ def run_sleep_cycle(
         night=night, project=project, started_at=started,
         n_sessions=n_sessions, n_tasks=len(tasks),
     )
+    if not redact_enabled:
+        report.notes.append(
+            "redact_secrets is disabled (redact_secrets=false in config) — "
+            "the task archive (state.json), staged files, and diagnostics are "
+            "NOT scrubbed of secret-looking text"
+        )
+    if cfg.get("replay_mode", "mock") != "mock":
+        # replay_mode: "fresh" (worktree replay) is declared in config.py's
+        # DEFAULTS docstring but was never implemented anywhere in this
+        # engine -- it only ever fed a cosmetic label in the report. Every
+        # replay this cycle actually runs is the sandboxed "mock" prompt
+        # replay regardless of this setting; say so rather than let the
+        # report's "replay: fresh" line imply real worktree isolation.
+        report.notes.append(
+            f"replay_mode={cfg.get('replay_mode')!r} is not implemented in this "
+            f"engine (no worktree replay exists) — replay ran as 'mock' regardless"
+        )
 
     if not tasks:
         report.ended_at = _now_iso(clock)
@@ -270,8 +297,11 @@ def run_sleep_cycle(
         evolve_memory=cfg.get("evolve_memory", True),
         night=night,
     )
-    # archive tonight's real (non-dream) tasks so future nights can recall them
-    state.add_to_archive([t.to_dict() for t in tasks if t.origin != "dream"])
+    # archive tonight's real (non-dream) tasks so future nights can recall
+    # them. This persists to ~/.skillopt-sleep/state.json indefinitely,
+    # outside the staging dir a user is ever told to review — redact it the
+    # same as everything else (see redact_enabled above).
+    state.add_to_archive([_maybe_redact(t.to_dict()) for t in tasks if t.origin != "dream"])
     _progress(
         cfg,
         f"consolidate done: gate={result.gate_action} accepted={result.accepted} "
@@ -304,16 +334,8 @@ def run_sleep_cycle(
         report_md = _render_report_md(report, cfg)
         proposed_skill = result.new_skill if (cfg.get("evolve_skill") and result.accepted) else None
         proposed_memory = result.new_memory if (cfg.get("evolve_memory") and result.accepted) else None
-        # `redact_secrets` was declared in DEFAULTS but nothing ever read it —
-        # honor the user's choice (it's their config), but never silently:
-        # a loud report note if they've turned scrubbing off.
-        redact_enabled = bool(cfg.get("redact_secrets", True))
-        if not redact_enabled:
-            report.notes.append(
-                "redact_secrets is disabled (redact_secrets=false in config) — "
-                "staged files and diagnostics are NOT scrubbed of secret-looking text"
-            )
-        _maybe_redact = redact_secrets if redact_enabled else (lambda v: v)
+        # redact_enabled / _maybe_redact are computed once, up front (see
+        # above) so they also cover the task archive.
         staging_dir = write_staging(
             project,
             report=report,
