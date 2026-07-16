@@ -51,6 +51,8 @@ Weave all seven parts as natural flowing prose — no headers, no bulleted spec.
 
 Fix any miss before shipping: (1) deliverable + quantity concrete enough that a stranger could judge done; (2) every named resource verified in step 3; (3) creative-freedom clause present; (4) verification loop present and matched to the medium; (5) destination explicit; (6) ends with the goal line + autonomy directive, 150–350 words.
 
+The mechanically checkable subset (word count, goal line, autonomy directive, verification/freedom/destination language) can be run: `python3 scripts/goal_prompt_self_check.py -` with the draft on stdin — exit 0 means those checks pass; judgment calls (1) and (2) stay yours.
+
 Output the prompt in a single fenced code block, then a short **Assumptions** list (2–4 bullets) so the user can correct any gap-fill with one line. Nothing else — no preamble above the code block.
 
 ## Anti-patterns
